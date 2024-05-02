@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Scegli la tua quest{% endblock %}
+
+{% block content %}
+    <form action="/generate_quest" method="post">
+        <label for="player">Player:</label>
+        <select name="player" id="player">
+            <!-- Opzioni per il giocatore -->
+        </select><br>
+
+        <label for="place">Luogo:</label>
+        <select name="place" id="place">
+            <!-- Opzioni per il luogo -->
+        </select><br>
+
+        <label for="npc">NPC che incontri:</label>
+        <select name="npc" id="npc">
+            <!-- Opzioni per gli NPC -->
+        </select><br>
+
+        <label for="quest_type">Tipo di quest:</label><br>
+        {% for description in quest_types %}
+            <input type="checkbox" name="quest_type[]" value="{{ description }}"> {{ description }}<br>
+        {% endfor %}
+
+
+        <button type="submit">Genera quest</button>
+    </form>
+{% endblock %}
