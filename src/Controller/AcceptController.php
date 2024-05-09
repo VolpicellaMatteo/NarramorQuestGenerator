@@ -11,6 +11,9 @@ class AcceptController extends AbstractController
     #[Route('/accept', name: 'accept')]
     public function index(): Response
     {
+
+        
+
         return $this->render('main/accept.html.twig');
     }
 }

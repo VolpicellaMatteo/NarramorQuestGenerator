@@ -4,10 +4,13 @@
 
 {% block content %}
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    <p>{{ player }}</p>
-    <p>{{ place }}</p>
-    <p>{{ npc }}</p>
-    <p>{{ quest_type }}</p>
+    
+    <p>
+    {{ app.session.get('player') }}<br>
+    {{ app.session.get('place') }}<br>
+    {{ app.session.get('npc') }}<br>
+    {{ app.session.get('quest_type') }}<br>
+    </p>
 
     <a href="{{ path('accept') }}">
         <button type="submit">Accetta quest</button>

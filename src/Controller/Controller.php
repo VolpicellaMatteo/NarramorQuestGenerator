@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class Controller extends AbstractController
 {
-    #[Route('/', name: 'Home')]
+    #[Route('/', name: 'home')]
     public function home(Quest_type $quest_type): Response
     {
         //questType
@@ -21,7 +21,7 @@ class Controller extends AbstractController
             $descriptions[] = $quest->getDesc();
         }
 
-        
+
 
         return $this->render('main/home.html.twig', [
             'quest_types' => $descriptions
