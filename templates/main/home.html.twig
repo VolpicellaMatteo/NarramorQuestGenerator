@@ -3,28 +3,36 @@
 {% block title %}Scegli la tua quest{% endblock %}
 
 {% block content %}
-    <form action="/generate_quest" method="post">
+    <form action="{{ path('choose') }}" method="post">
         <label for="player">Player:</label>
         <select name="player" id="player">
-            <!-- Opzioni per il giocatore -->
+            {% for i in 1..10 %}
+                <option value="{{ i }}">Player {{ i }}</option>
+            {% endfor %}
         </select><br>
 
         <label for="place">Luogo:</label>
         <select name="place" id="place">
-            <!-- Opzioni per il luogo -->
+            {% set places = ['Foresta', 'Caverna', 'Castello', 'Villaggio', 'Montagna', 'Deserto', 'Oceano', 'Città'] %}
+            {% for place in places %}
+                <option value="{{ place }}">{{ place }}</option>
+            {% endfor %}
         </select><br>
 
         <label for="npc">NPC che incontri:</label>
         <select name="npc" id="npc">
-            <!-- Opzioni per gli NPC -->
+            {% set npcs = ['Avventuriero', 'Mercante', 'Re', 'Drago', 'Stregone', 'Principessa', 'Ladro', 'Guardia'] %}
+            {% for npc in npcs %}
+                <option value="{{ npc }}">{{ npc }}</option>
+            {% endfor %}
         </select><br>
 
         <label for="quest_type">Tipo di quest:</label><br>
         {% for description in quest_types %}
-            <input type="checkbox" name="quest_type[]" value="{{ description }}"> {{ description }}<br>
+            <input type="checkbox" name="quest_type" value="{{ description }}"> {{ description }}<br>
         {% endfor %}
 
 
-        <button type="submit">Genera quest</button>
+        <button type="submit" >Genera quest</button>
     </form>
 {% endblock %}
