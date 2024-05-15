@@ -15,7 +15,7 @@ class HomeController extends AbstractController
     private Database $database;
 
     #[Route('/', name: 'home')]
-    public function home(Quest_type $quest_type) :Response
+    public function home() :Response
     {
         
 
@@ -44,6 +44,33 @@ class HomeController extends AbstractController
         ]);
     }
 }
+
+// namespace App\Controller;
+
+// use App\Service\DatabaseService;
+// use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+// use Symfony\Component\HttpFoundation\Response;
+// use Symfony\Component\Routing\Annotation\Route;
+
+// class HomeController extends AbstractController
+// {
+//     #[Route('/', name: 'home')]
+//     public function home(DatabaseService $databaseService): Response
+//     {
+//         // Utilizzare i metodi del servizio DatabaseService per ottenere i dati dal database
+//         $players = $databaseService->getPlayers();
+//         $npc = $databaseService->getNpc();
+//         $places = $databaseService->getPlaces();
+//         $questType = $databaseService->getQuestType();
+
+//         return $this->render('main/home.html.twig', [
+//             'players' => $players,
+//             'npc' => $npc,
+//             'places' => $places,
+//             'questType' => $questType,
+//         ]);
+//     }
+// }
 
 
 
