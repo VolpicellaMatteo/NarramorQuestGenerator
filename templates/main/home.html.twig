@@ -3,36 +3,53 @@
 {% block title %}Scegli la tua quest{% endblock %}
 
 {% block content %}
+    
     <form action="{{ path('choose') }}" method="post">
+
         <label for="player">Player:</label>
         <select name="player" id="player">
-            {% for i in 1..10 %}
-                <option value="{{ i }}">Player {{ i }}</option>
+            {% for player in players %}
+                <option value="{{ player['title'] }}">{{ player['title'] }} ( lvl. {{ player['level'] }} ) </option>
             {% endfor %}
         </select><br>
 
-        <label for="place">Luogo:</label>
-        <select name="place" id="place">
-            {% set places = ['Foresta', 'Caverna', 'Castello', 'Villaggio', 'Montagna', 'Deserto', 'Oceano', 'Città'] %}
+        {# <label for="places">Places:</label>
+        <select name="places" id="places">
             {% for place in places %}
-                <option value="{{ place }}">{{ place }}</option>
+                <option value="{{ place['title'] }}">{{ place['title'] }}</option>
             {% endfor %}
-        </select><br>
+        </select><br> #}
 
-        <label for="npc">NPC che incontri:</label>
+        <label for="npc">NPC:</label>
         <select name="npc" id="npc">
-            {% set npcs = ['Avventuriero', 'Mercante', 'Re', 'Drago', 'Stregone', 'Principessa', 'Ladro', 'Guardia'] %}
-            {% for npc in npcs %}
-                <option value="{{ npc }}">{{ npc }}</option>
+            {% for nonplayer in npc %}
+                <option value="{{ nonplayer['title'] }}">{{ nonplayer['title'] }}</option>
             {% endfor %}
         </select><br>
 
-        <label for="quest_type">Tipo di quest:</label><br>
-        {% for description in quest_types %}
-            <input type="checkbox" name="quest_type" value="{{ description }}"> {{ description }}<br>
-        {% endfor %}
+        <label for="quest_type">Tipo di quest:</label>
+            {% for quest in quest_type %}
+                <input type="checkbox" name="quest_type" value="{{ quest['title'] }}">{{ quest['title'] }}</input><br>
+            {% endfor %}
+        
+
+       
 
 
         <button type="submit" >Genera quest</button>
     </form>
 {% endblock %}
+
+
+{# <label for="place">Luogo:</label>
+        <select name="place" id="place">
+            {% set places = ['Foresta', 'Caverna', 'Castello', 'Villaggio', 'Montagna', 'Deserto', 'Oceano', 'Città'] %}
+            {% for place in places %}
+                <option value="{{ place }}">{{ place }}</option>
+            {% endfor %}
+        </select><br> #}
+
+         {# <label for="quest_type">Tipo di quest:</label><br>
+        {% for description in quest_types %}
+            <input type="checkbox" name="quest_type" value="{{ description }}"> {{ description }}<br>
+        {% endfor %} #}

@@ -22,3 +22,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+services:
+    App\Service\DatabaseService:
+        arguments:
+            $host: '%env(DATABASE_HOST)%'
+            $port: '%env(DATABASE_PORT)%'
+            $dbName: '%env(DATABASE_NAME)%'
+            $user: '%env(DATABASE_USER)%'
+            $password: '%env(DATABASE_PASSWORD)%'
