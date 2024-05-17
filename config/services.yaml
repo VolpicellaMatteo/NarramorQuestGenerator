@@ -11,6 +11,15 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    # Definizione del servizio DatabaseService
+    App\Service\DatabaseService:
+        arguments:
+            $host: 'localhost'
+            $port: '3306'
+            $dbname: 'Narramor'
+            $username: 'root'
+            $password: ''
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -22,12 +31,5 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-services:
-    # Definizione del servizio DatabaseService
-    App\Service\DatabaseService:
-        arguments:
-            $host: 'localhost'
-            $port: '3306'
-            $dbname: 'Narramor'
-            $username: 'root'
-            $password: ''
+
+   

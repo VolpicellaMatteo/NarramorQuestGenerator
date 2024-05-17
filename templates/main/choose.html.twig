@@ -4,11 +4,13 @@
 
 {% block content %}
     <h1>Testo quest generato dal bot</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    {# <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p> #}
     
+    <h2>l'item selezionato è -{{ item }}-</h2>
+    <h2>il quest reciver è -{{ quest_reciver }}-</h2>
+
     <p>
     {{ app.session.get('player') }}<br>
-    {# {{ app.session.get('places') }}<br> #}
     {{ app.session.get('npc') }}<br>
     {{ app.session.get('quest_type') }}<br>
     </p>

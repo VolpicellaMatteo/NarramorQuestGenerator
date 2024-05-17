@@ -9,7 +9,7 @@
         <label for="player">Player:</label>
         <select name="player" id="player">
             {% for player in players %}
-                <option value="{{ player['title'] }}">{{ player['title'] }} ( lvl. {{ player['level'] }} ) </option>
+                <option value="{{ player['id'] }}">{{ player['id'] }}- {{ player['title'] }} ( lvl. {{ player['level'] }} ) </option>
             {% endfor %}
         </select><br>
 
@@ -23,7 +23,7 @@
         <label for="npc">NPC:</label>
         <select name="npc" id="npc">
             {% for nonplayer in npc %}
-                <option value="{{ nonplayer['title'] }}">{{ nonplayer['title'] }}</option>
+                <option value="{{ nonplayer['id'] }}">{{ nonplayer['id'] }}- {{ nonplayer['title'] }}</option>
             {% endfor %}
         </select><br>
 
