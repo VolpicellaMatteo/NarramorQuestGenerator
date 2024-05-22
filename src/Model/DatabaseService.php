@@ -9,6 +9,8 @@ class DatabaseService
 {
     private PDO $pdo;
 
+    //DATABASE CONNECTION
+    //___________________________________________________________________________________________________________
     public function __construct(string $host, string $port, string $dbname, string $username, string $password)
     {
         // Connessione al database
@@ -19,28 +21,63 @@ class DatabaseService
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
+    //GET TABLES
+    //___________________________________________________________________________________________________________
+
     //get all players
     public function getPlayers(): array
     {
-        $statement = $this->pdo->query('SELECT * FROM players');
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $query = $this->pdo->query('SELECT * FROM players');
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
         return $results;
     }
 
     //get all npc (id e nome)
     public function getNpc(): array
     {
-        $statement = $this->pdo->query('SELECT id,title FROM npc where questGiver=1');
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $query = $this->pdo->query('SELECT id,title,socialRank FROM npc where questGiver=1');
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
         return $results;
     }
 
     //get all quest type
     public function getQuestType(): array
     {
-        $statement = $this->pdo->query('SELECT * FROM menu_questtype');
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $query = $this->pdo->query('SELECT * FROM menu_questtype');
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
         return $results;
+    }
+
+    //get player language
+    public function getPlayerLanguage($idPlayer): string
+    {
+        $query = $this->pdo->query("SELECT language FROM players WHERE id = $idPlayer");
+        $result = $query->fetchColumn(); 
+        return $result;
+    }
+
+    //get levels border table
+    public function getLevelsBorder(): array
+    {
+        $query = $this->pdo->query("SELECT stringa, questGiverMin, questGiverMax FROM levels");
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
+    }
+
+    
+
+
+    //LEVEL CONVERSION
+    //___________________________________________________________________________________________________________
+
+    public function convertLevelToQuestGiver($player_level)
+    {
+
+    }
+
+    public function convertLevelToItemRarity($player_level)
+    {
+        
     }
 
 
@@ -50,32 +87,43 @@ class DatabaseService
     //prendo l'organizzazione del npc che incontro
     public function getNpcOrg($idNpc):string
     {
-        $statement = $this->pdo->query("SELECT organization FROM npc WHERE id = $idNpc");
-        $result = $statement->fetchColumn(); // Restituisce direttamente il valore della colonna 'organization'
+        $query = $this->pdo->query("SELECT organization FROM npc WHERE id = $idNpc");
+        $result = $query->fetchColumn(); // Restituisce direttamente il valore della colonna 'organization'
         return $result;
     }
 
 
-    //return random item compatibile con l'organizzazione dell'npc
-    public function getNpcCompatibleItem($org):string
+    //return random item compatibile con l'organizzazione dell'npc e il livello del player
+    public function getNpcCompatibleItem($org,$idPlayer):array
     {
-        $statement = $this->pdo->query("SELECT title FROM items WHERE questobject = 1 AND $org = 1");
-        $results = [];
-        while ($title = $statement->fetchColumn()) {
-            $results[] = $title;
-        }
+        $query = $this->pdo->query(
+            "SELECT items.id,items.title,items.rarity
+            FROM items
+            JOIN levels
+            ON items.rarity >= levels.questObjectRarityMin
+            AND items.rarity <= levels.questObjectRarityMax
+            JOIN players
+            ON players.level = levels.stringa
+            WHERE players.id = $idPlayer
+            AND items.questobject = 1 
+            AND $org = 1"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
         $randomIndex = array_rand($results);
         return $results[$randomIndex];
     }
 
     //return quest reciver based on quest giver org compatibility
-    public function getQuestReciver($org):string
+    public function getQuestReciver($org):array
     {
-        $statement = $this->pdo->query("SELECT title FROM factions WHERE relation_$org >=0");
-        $results = [];
-        while ($title = $statement->fetchColumn()) {
-            $results[] = $title;
-        }
+        $query = $this->pdo->query(
+            "SELECT npc.id, npc.title, npc.organization
+            FROM npc
+            JOIN factions
+            ON npc.organization LIKE factions.title
+            WHERE factions.title LIKE relation_$org >=0"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
         $randomIndex = array_rand($results);
         return $results[$randomIndex];
     }

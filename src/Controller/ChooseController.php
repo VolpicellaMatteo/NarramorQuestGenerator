@@ -12,6 +12,7 @@ use App\Model\Quest\Dispatch_enemy;
 use App\Model\Quest\Fetch_item;
 use App\Model\Quest\Get_stolen_item;
 use App\Model\Quest\Save_kidanapped_npc;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ChooseController extends AbstractController
 {
@@ -24,7 +25,7 @@ class ChooseController extends AbstractController
 
 
     #[Route('/choose', name: 'choose')]
-    public function index(Request $request,DatabaseService $databaseService): Response
+    public function index(Request $request,DatabaseService $databaseService,SessionInterface $session): Response
     {
     
     $session = $request->getSession();
@@ -32,6 +33,7 @@ class ChooseController extends AbstractController
     //$session->set('places' , $_POST['places']);
     $session->set('idnpc',$_POST['npc']);
     $session->set('quest_type' , $_POST['quest_type']);
+    $session->set('language', $databaseService->getPlayerLanguage($_POST['player']));
 
     $idplayer = $session->get('idplayer');
     $idnpc = $session->get('idnpc');
@@ -40,33 +42,33 @@ class ChooseController extends AbstractController
     switch($questType){
         case "Porta un tesoro a un mio associato":
         case "Bring a treasure to an associate":
-            $bringItem = new Bring_item($idplayer,$idnpc);
+            $bringItem = new Bring_item($idplayer , $idnpc);
             $params = $bringItem->generateQuest($databaseService);
             //$item = $this->randomBringItem($items);
             break;
 
         case "Trovami gli ingredienti per un mistico unguento":
         case "Fetch me the ingredients":
-            $bringItem = new Bring_item($idplayer,$idnpc);
-            $params = $bringItem->generateQuest($databaseService);
+            $fetchItem = new Fetch_item($idplayer, $idnpc);
+            $params = $fetchItem->generateQuest($databaseService);
             break;
 
         case "Recupera l'oggetto che ci fu rubato":
         case "Retrieve the stolen item":
-            $bringItem = new Bring_item($idplayer,$idnpc);
-            $params = $bringItem->generateQuest($databaseService);
+            $getStolenItem = new Get_stolen_item($idplayer, $idnpc);
+            $params = $getStolenItem->generateQuest($databaseService);
             break;
 
         case "Salva una persona rapita":
         case "Save the kidnapped associate":
-            $bringItem = new Bring_item($idplayer,$idnpc);
-            $params = $bringItem->generateQuest($databaseService);
+            $saveKidnappedNpc = new Save_kidanapped_npc($idplayer, $idnpc);
+            $params = $saveKidnappedNpc->generateQuest($databaseService);
             break;
 
         case "Sbarazzaci di un nemico":
         case "Dispatch my enemy":
-            $bringItem = new Bring_item($idplayer,$idnpc);
-            $params = $bringItem->generateQuest($databaseService);
+            $dispatchEnemy = new Dispatch_enemy($idplayer, $idnpc);
+            $params = $dispatchEnemy->generateQuest($databaseService);
             break;
 
     }
@@ -78,14 +80,14 @@ class ChooseController extends AbstractController
     }
 
     public function randomBringItem($array): string
-{
-    if (empty($array)) {
-        return ''; 
+    {
+        if (empty($array)) {
+            return ''; 
+        }
+
+        $randomIndex = array_rand($array);
+
+        return $array[$randomIndex];
     }
-
-    $randomIndex = array_rand($array);
-
-    return $array[$randomIndex];
-}
 
 }

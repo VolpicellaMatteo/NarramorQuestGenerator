@@ -9,36 +9,125 @@
         <label for="player">Player:</label>
         <select name="player" id="player">
             {% for player in players %}
-                <option value="{{ player['id'] }}">{{ player['id'] }}- {{ player['title'] }} ( lvl. {{ player['level'] }} ) </option>
+            {# Ottieni il livello del giocatore #}
+            {% set playerLevel = player['level'] %}
+            
+            {# Trova i valori di questGiverMin e questGiverMax corrispondenti al livello del giocatore #}
+            {% set playerQuestGiverMin = null %}
+            {% set playerQuestGiverMax = null %}
+            {% for level in levels %}
+                {% if level.stringa == playerLevel %}
+                    {% set playerQuestGiverMin = level.questGiverMin %}
+                    {% set playerQuestGiverMax = level.questGiverMax %}
+                    
+                {% endif %}
             {% endfor %}
-        </select><br>
 
-        {# <label for="places">Places:</label>
-        <select name="places" id="places">
-            {% for place in places %}
-                <option value="{{ place['title'] }}">{{ place['title'] }}</option>
-            {% endfor %}
-        </select><br> #}
+            {# Crea l'opzione per la selezione del personaggio con attributi dati #}
+            <option 
+                value="{{ player['id'] }}" 
+                data-level="{{ playerLevel }}" 
+                data-min-level="{{ playerQuestGiverMin }}" 
+                data-max-level="{{ playerQuestGiverMax }}" 
+                language="{{ player['language']}}"
+            >
+                    {{ player['id'] }}- {{ player['title'] }} (lvl. {{ playerLevel }}) ( lvl min: {{ playerQuestGiverMin }} | lvl max:{{ playerQuestGiverMax }} )
+            </option>
+        {% endfor %}
+
+        </select><br>
 
         <label for="npc">NPC:</label>
         <select name="npc" id="npc">
             {% for nonplayer in npc %}
-                <option value="{{ nonplayer['id'] }}">{{ nonplayer['id'] }}- {{ nonplayer['title'] }}</option>
+                <option value="{{ nonplayer['id'] }}" level="{{nonplayer['socialRank']}}">
+                    {{ nonplayer['id'] }}- lvl. {{nonplayer['socialRank']}} - {{ nonplayer['title'] }}
+                </option>
             {% endfor %}
         </select><br>
 
-        <label for="quest_type">Tipo di quest:</label>
+        <label for="quest_type" id="quest_type">Tipo di quest:</label>
             {% for quest in quest_type %}
-                <input type="checkbox" name="quest_type" value="{{ quest['title'] }}">{{ quest['title'] }}</input><br>
+                <input type="checkbox" name="quest_type" value="{{ quest['title'] }}" language="{{ quest['language']}}">{{ quest['title'] }}</input><br>
             {% endfor %}
         
 
-       
-
-
         <button type="submit" >Genera quest</button>
+
+        <script>
+        
+        document.addEventListener('DOMContentLoaded', () => 
+        {
+            const personaggiSelect = document.getElementById('player');
+            const npcSelect = document.getElementById('npc');
+            
+            personaggiSelect.addEventListener('change', () => 
+            {
+                const selectedOption = personaggiSelect.options[personaggiSelect.selectedIndex];
+                const maxLevel = parseInt(selectedOption.getAttribute('data-max-level'), 10);
+                const minLevel = parseInt(selectedOption.getAttribute('data-min-level'), 10);
+
+                for (let i = 0; i < npcSelect.options.length; i++) {
+                    const option = npcSelect.options[i];
+                    const level = parseInt(option.getAttribute('level'), 10);
+
+                    if (level >= minLevel && level <= maxLevel) {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                }
+                for (let i = 0; i < npcSelect.options.length; i++) {
+                    if (npcSelect.options[i].style.display === 'block') {
+                        npcSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            });
+            personaggiSelect.dispatchEvent(new Event('change'));
+        });
+
+    </script>
+
+    
+        <script>
+        document.addEventListener('DOMContentLoaded', () => 
+        {
+            const personaggiSelect = document.getElementById('player');
+            const questCheckboxes = document.querySelectorAll('input[name="quest_type"]');
+            
+            personaggiSelect.addEventListener('change', () => 
+            {
+                const selectedOption = personaggiSelect.options[personaggiSelect.selectedIndex];
+                const playerLanguage = parseInt(selectedOption.getAttribute('language'), 10);
+
+                questCheckboxes.forEach(checkbox => {
+                    const questLanguage = parseInt(checkbox.getAttribute('language'), 10);
+                    console.log(questLanguage);
+                    console.log(playerLanguage);
+
+                    if (playerLanguage === questLanguage) {
+                        checkbox.style.display = 'inline-block';
+                    } else {
+                        checkbox.style.display = 'none';
+                    }
+                });
+
+                
+            });
+            personaggiSelect.dispatchEvent(new Event('change'));
+        });
+        </script>
+
+
     </form>
 {% endblock %}
+
+
+
+
+
+
 
 
 {# <label for="place">Luogo:</label>
@@ -53,3 +142,11 @@
         {% for description in quest_types %}
             <input type="checkbox" name="quest_type" value="{{ description }}"> {{ description }}<br>
         {% endfor %} #}
+
+        
+        {# <label for="places">Places:</label>
+        <select name="places" id="places">
+            {% for place in places %}
+                <option value="{{ place['title'] }}">{{ place['title'] }}</option>
+            {% endfor %}
+        </select><br> #}

@@ -21,7 +21,7 @@ class Bring_item
 
         //prendo item random compatibile con l'organizzazione del'npc
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
-        $item = $databaseService->getNpcCompatibleItem($npcOrg);
+        $item = $databaseService->getNpcCompatibleItem($npcOrg,$this->idplayer);
         $questReciver = $databaseService->getQuestReciver($npcOrg);
         $params = [
             'item'=> $item,

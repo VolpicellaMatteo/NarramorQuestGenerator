@@ -10,15 +10,20 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\DatabaseService;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class HomeController extends AbstractController
 {
     //private Database $database;
 
     #[Route('/', name: 'home')]
-    public function home(DatabaseService $databaseService) :Response
+    public function home(DatabaseService $databaseService,SessionInterface $session) :Response
     {
-        
+         // Elimina la sessione esistente
+         $session->invalidate();
+
+         // Crea una nuova sessione
+         $session->start();
 
         //$database = new Database("localhost","3306","Narramor","root","");
 
@@ -34,14 +39,20 @@ class HomeController extends AbstractController
         //quest_type
         $qtype = $databaseService->getQuestType();
 
-        //var_dump($qtype);
+        //get levels conversion method
+        $levels = $databaseService->getLevelsBorder();
+
+        // dump($players);
+        //dump($npc);
+        //dump($levels);
         //dump($qtype);
 
 
         return $this->render('main/home.html.twig', [
             'players' => $players,
             'npc'=> $npc,
-            'quest_type'=> $qtype
+            'quest_type'=> $qtype,
+            'levels'=> $levels
         ]);
     }
 }

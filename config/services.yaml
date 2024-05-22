@@ -32,4 +32,12 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-   
+    Symfony\Component\HttpFoundation\Session\SessionInterface: '@session'
+
+    Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage:
+        arguments:
+            - '%env(DEFAULT_SESSION_LIFETIME)%'
+            - '%env(DEFAULT_SESSION_NAME)%'
+
+    Symfony\Component\HttpFoundation\Session\Session:
+        arguments: ['@Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage']
