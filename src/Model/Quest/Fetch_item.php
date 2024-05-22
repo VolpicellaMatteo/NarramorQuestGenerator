@@ -21,7 +21,7 @@ class Fetch_item
 
         //prendo tutti gli item compatibili con l'organizzazione del'npc
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
-        $compItems = $databaseService->getNpcCompatibleItem($npcOrg);
+        $compItems = $databaseService->getNpcCompatibleItem($npcOrg, $this->idplayer);
         return $compItems;
 
     }

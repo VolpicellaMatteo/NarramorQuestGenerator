@@ -24,3 +24,39 @@
         <button type="submit">Rifiuta quest</button>
     </a>
 {% endblock %}
+---------------------------------------
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Spiegazione della quest{% endblock %}
+
+{% block content %}
+    <h1>{{ app.session.get('quest_type') }}</h1>
+    
+    {% set questType = app.session.get('quest_type') %}
+
+    {% if questType == 'Porta un tesoro a un mio associato' %}
+        <p>Dettagli specifici per "Porta un tesoro a un mio associato".</p>
+    {% elseif questType == 'Trovami gli ingredienti per un mistico unguento' %}
+        <p>Dettagli specifici per "Trovami gli ingredienti per un mistico unguento".</p>
+    {% elseif questType == 'Recupera l\'oggetto che ci fu rubato' %}
+        <p>Dettagli specifici per "Recupera l'oggetto che ci fu rubato".</p>
+    {% elseif questType == 'Salva una persona rapita' %}
+        <p>Dettagli specifici per "Salva una persona rapita".</p>
+    {% elseif questType == 'Sbarazzaci di un nemico' %}
+        <p>Dettagli specifici per "Sbarazzaci di un nemico".</p>
+    {% else %}
+        <p>Dettagli generali per altre quest.</p>
+    {% endif %}
+    
+    <h2>l'item selezionato è {{ item['id'] }} - {{ item['title'] }} (lvl. {{ item['rarity'] }})</h2>
+    <h2>il quest reciver è {{ quest_reciver['id'] }} - {{ quest_reciver['title'] }} ({{ quest_reciver['organization'] }})</h2>
+
+    <a href="{{ path('accept') }}">
+        <button type="submit">Accetta quest</button>
+    </a>
+
+    <a href="{{ path('refuse') }}">
+        <button type="submit">Rifiuta quest</button>
+    </a>
+{% endblock %}

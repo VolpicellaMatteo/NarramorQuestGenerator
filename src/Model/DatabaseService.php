@@ -131,6 +131,31 @@ class DatabaseService
     //FETCH ITEMS
     //___________________________________________________________________________________________________________
 
+    public function getCraftableItem($org,$idPlayer)
+    {
+        $query = $this->pdo->query(
+            "SELECT items.id
+            FROM items
+            JOIN levels
+            ON items.rarity >= levels.questObjectRarityMin
+            AND items.rarity <= levels.questObjectRarityMax
+            JOIN players
+            ON players.level = levels.stringa
+            WHERE players.id = $idPlayer
+            AND items.questobject = 1 
+            AND $org = 1
+            AND items.1itemid IS NOT NULL"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($results) > 0) {
+            $randomIndex = array_rand($results);
+            return $results[$randomIndex];
+        } else {
+            
+            return "Nessun item craftable trovato";
+        }
+    }
 
     //SAVE KIDNAPPED NPC
     //___________________________________________________________________________________________________________
