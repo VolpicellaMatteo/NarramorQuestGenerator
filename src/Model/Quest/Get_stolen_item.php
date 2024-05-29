@@ -21,8 +21,14 @@ class Get_stolen_item
 
         //prendo tutti gli item compatibili con l'organizzazione del'npc
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
-        $compItems = $databaseService->getNpcCompatibleItem($npcOrg);
-        return $compItems;
+        $item = $databaseService->getNpcCompatibleItem($npcOrg,$this->idplayer);
+        
+        
+        $params = [
+            'item'=> $item 
+        ];
+        
+        return $params;
 
     }
 

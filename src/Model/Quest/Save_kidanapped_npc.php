@@ -21,8 +21,12 @@ class Save_kidanapped_npc
 
         //prendo tutti gli item compatibili con l'organizzazione del'npc
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
-        $compItems = $databaseService->getNpcCompatibleItem($npcOrg);
-        return $compItems;
+        $npc = $databaseService->getKidanappedNpc($npcOrg,$this->idplayer);
+        $params = [
+            'npc'=> $npc 
+        ];
+        
+        return $params;
 
     }
 

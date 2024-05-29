@@ -23,6 +23,7 @@ class Bring_item
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
         $item = $databaseService->getNpcCompatibleItem($npcOrg,$this->idplayer);
         $questReciver = $databaseService->getQuestReciver($npcOrg);
+        
         $params = [
             'item'=> $item,
             'quest_reciver' => $questReciver 

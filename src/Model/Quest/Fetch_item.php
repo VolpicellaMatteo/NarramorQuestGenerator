@@ -18,11 +18,13 @@ class Fetch_item
 
     public function generateQuest(DatabaseService $databaseService)
     {
-
         //prendo tutti gli item compatibili con l'organizzazione del'npc
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
-        $compItems = $databaseService->getNpcCompatibleItem($npcOrg, $this->idplayer);
-        return $compItems;
+        $item = $databaseService->getCraftableItem($npcOrg, $this->idplayer);
+        $params = [
+            'item'=> $item, 
+        ];
+        return $params;
 
     }
 

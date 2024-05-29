@@ -21,8 +21,12 @@ class Dispatch_enemy
 
         //prendo tutti gli item compatibili con l'organizzazione del'npc
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
-        $compItems = $databaseService->getNpcCompatibleItem($npcOrg);
-        return $compItems;
+        $enemy = $databaseService->getMonsterToKill($npcOrg);
+        $params = [
+            'enemy'=> $enemy 
+        ];
+        
+        return $params;
 
     }
 

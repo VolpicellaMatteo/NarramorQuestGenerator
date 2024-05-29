@@ -56,6 +56,13 @@ class DatabaseService
         return $result;
     }
 
+    public function getPlayerLevel ($idPlayer): string
+    {
+        $query = $this->pdo->query("SELECT level FROM players WHERE id = $idPlayer");
+        $result = $query->fetchColumn(); 
+        return $result;
+    }
+
     //get levels border table
     public function getLevelsBorder(): array
     {
@@ -106,7 +113,7 @@ class DatabaseService
             ON players.level = levels.stringa
             WHERE players.id = $idPlayer
             AND items.questobject = 1 
-            AND $org = 1"
+            AND items.$org = 1"
         );
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
         $randomIndex = array_rand($results);
@@ -134,7 +141,7 @@ class DatabaseService
     public function getCraftableItem($org,$idPlayer)
     {
         $query = $this->pdo->query(
-            "SELECT items.id
+            "SELECT items.id,items.title,items.rarity, items.1itemid, items.2itemid, items.3itemid, items.4itemid, items.5itemid
             FROM items
             JOIN levels
             ON items.rarity >= levels.questObjectRarityMin
@@ -144,7 +151,7 @@ class DatabaseService
             WHERE players.id = $idPlayer
             AND items.questobject = 1 
             AND $org = 1
-            AND items.1itemid IS NOT NULL"
+            AND items.1itemid != '' "
         );
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -152,7 +159,6 @@ class DatabaseService
             $randomIndex = array_rand($results);
             return $results[$randomIndex];
         } else {
-            
             return "Nessun item craftable trovato";
         }
     }
@@ -160,6 +166,24 @@ class DatabaseService
     //SAVE KIDNAPPED NPC
     //___________________________________________________________________________________________________________
 
+    public function getKidanappedNpc($org,$idPlayer):array
+    {
+        $levelPlayer = $this-> getPlayerLevel($idPlayer);
+        $query = $this->pdo->query(
+            "SELECT npc.id , npc.title , npc.organization, npc.socialRank
+            FROM npc
+            JOIN factions 
+            ON npc.organization LIKE factions.stringa
+            JOIN levels
+            ON npc.socialRank >= questGiverMin
+            AND npc.socialRank <= questGiverMax
+            WHERE levels.stringa LIKE $levelPlayer
+            AND factions.relation_$org >=0"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    }
 
     //GET STOLEN ITEM
     //___________________________________________________________________________________________________________
@@ -168,7 +192,19 @@ class DatabaseService
     //DISPATCH ENEMY
     //___________________________________________________________________________________________________________
 
-
+    public function getMonsterToKill($org):array
+    {
+        $query = $this->pdo->query(
+            "SELECT npc.id, npc.title, npc.organization, npc.socialRank
+            FROM npc
+            JOIN factions
+            ON npc.organization LIKE factions.title
+            AND factions.relation_$org <0"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    }
 }
 
 

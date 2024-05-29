@@ -5,51 +5,57 @@
 {% block content %}
     
     <form action="{{ path('choose') }}" method="post">
+        <div class="player">
+            <label for="player">Player:</label>
+            <select name="player" id="player">
+                {% for player in players %}
+                {# Ottieni il livello del giocatore #}
+                {% set playerLevel = player['level'] %}
+                
+                {# Trova i valori di questGiverMin e questGiverMax corrispondenti al livello del giocatore #}
+                {% set playerQuestGiverMin = null %}
+                {% set playerQuestGiverMax = null %}
+                {% for level in levels %}
+                    {% if level.stringa == playerLevel %}
+                        {% set playerQuestGiverMin = level.questGiverMin %}
+                        {% set playerQuestGiverMax = level.questGiverMax %}
+                        
+                    {% endif %}
+                {% endfor %}
 
-        <label for="player">Player:</label>
-        <select name="player" id="player">
-            {% for player in players %}
-            {# Ottieni il livello del giocatore #}
-            {% set playerLevel = player['level'] %}
-            
-            {# Trova i valori di questGiverMin e questGiverMax corrispondenti al livello del giocatore #}
-            {% set playerQuestGiverMin = null %}
-            {% set playerQuestGiverMax = null %}
-            {% for level in levels %}
-                {% if level.stringa == playerLevel %}
-                    {% set playerQuestGiverMin = level.questGiverMin %}
-                    {% set playerQuestGiverMax = level.questGiverMax %}
-                    
-                {% endif %}
-            {% endfor %}
-
-            {# Crea l'opzione per la selezione del personaggio con attributi dati #}
-            <option 
-                value="{{ player['id'] }}" 
-                data-level="{{ playerLevel }}" 
-                data-min-level="{{ playerQuestGiverMin }}" 
-                data-max-level="{{ playerQuestGiverMax }}" 
-                language="{{ player['language']}}"
-            >
-                    {{ player['id'] }}- {{ player['title'] }} (lvl. {{ playerLevel }}) ( lvl min: {{ playerQuestGiverMin }} | lvl max:{{ playerQuestGiverMax }} )
-            </option>
-        {% endfor %}
-
-        </select><br>
-
-        <label for="npc">NPC:</label>
-        <select name="npc" id="npc">
-            {% for nonplayer in npc %}
-                <option value="{{ nonplayer['id'] }}" level="{{nonplayer['socialRank']}}">
-                    {{ nonplayer['id'] }}- lvl. {{nonplayer['socialRank']}} - {{ nonplayer['title'] }}
+                {# Crea l'opzione per la selezione del personaggio con attributi dati #}
+                <option 
+                    value="{{ player['id'] }}" 
+                    data-level="{{ playerLevel }}" 
+                    data-min-level="{{ playerQuestGiverMin }}" 
+                    data-max-level="{{ playerQuestGiverMax }}" 
+                    language="{{ player['language']}}"
+                >
+                        {{ player['id'] }}- {{ player['title'] }} (lvl. {{ playerLevel }}) ( lvl min: {{ playerQuestGiverMin }} | lvl max:{{ playerQuestGiverMax }} )
                 </option>
             {% endfor %}
-        </select><br>
+            </select>
+        </div>
 
-        <label for="quest_type" id="quest_type">Tipo di quest:</label>
-            {% for quest in quest_type %}
-                <input type="checkbox" name="quest_type" value="{{ quest['title'] }}" language="{{ quest['language']}}">{{ quest['title'] }}</input><br>
-            {% endfor %}
+        <div class="npc">
+            <label for="npc">NPC:</label>
+            <select name="npc" id="npc">
+                {% for nonplayer in npc %}
+                    <option value="{{ nonplayer['id'] }}" level="{{nonplayer['socialRank']}}">
+                        {{ nonplayer['id'] }}- lvl. {{nonplayer['socialRank']}} - {{ nonplayer['title'] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="quest_type">
+            <label for="quest_type" id="quest_type">Tipo di quest:</label>
+                {% for quest in quest_type %}
+                    <input type="checkbox" name="quest_type" value="{{ quest['title'] }}" language="{{ quest['language']}}" idCH="{{ quest['id'] }}">
+                    <div id="{{ quest['id'] }}">{{ quest['title'] }}</div>
+                    </input>
+                {% endfor %}
+        </div>
         
 
         <button type="submit" >Genera quest</button>
@@ -96,6 +102,7 @@
             const personaggiSelect = document.getElementById('player');
             const questCheckboxes = document.querySelectorAll('input[name="quest_type"]');
             
+            
             personaggiSelect.addEventListener('change', () => 
             {
                 const selectedOption = personaggiSelect.options[personaggiSelect.selectedIndex];
@@ -103,12 +110,17 @@
 
                 questCheckboxes.forEach(checkbox => {
                     const questLanguage = parseInt(checkbox.getAttribute('language'), 10);
+                    const currentId = parseInt(checkbox.getAttribute('idCH'), 10);
+                    console.log(currentId);
                     console.log(questLanguage);
                     console.log(playerLanguage);
+                    const idCheckbox = document.getElementById(currentId);
 
                     if (playerLanguage === questLanguage) {
+                        idCheckbox.style.display = 'inline-block';
                         checkbox.style.display = 'inline-block';
                     } else {
+                        idCheckbox.style.display = 'none';
                         checkbox.style.display = 'none';
                     }
                 });

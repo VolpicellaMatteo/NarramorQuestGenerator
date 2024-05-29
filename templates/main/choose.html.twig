@@ -1,57 +1,57 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Spiegazione della quest{% endblock %}
-
-{% block content %}
-    <h1>{{ app.session.get('quest_type') }}</h1>
-    {# <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p> #}
-    
-    <h2>l'item selezionato è {{ item['id'] }}-{{ item['title'] }} (lvl. {{item['rarity']}})-</h2>
-    <h2>il quest reciver è {{ quest_reciver['id'] }}-{{ quest_reciver['title'] }} ({{ quest_reciver['organization'] }}) -</h2>
-
-    {# <p>
-    {{ app.session.get('idplayer') }}<br>
-    {{ app.session.get('idnpc') }}<br>
-    {{ app.session.get('language') }}<br>
-    <br> 
-    </p>#}
-
-    <a href="{{ path('accept') }}">
-        <button type="submit">Accetta quest</button>
-    </a>
-
-    <a href="{{ path('refuse') }}">
-        <button type="submit">Rifiuta quest</button>
-    </a>
-{% endblock %}
----------------------------------------
 
 {% extends 'base.html.twig' %}
 
 {% block title %}Spiegazione della quest{% endblock %}
 
 {% block content %}
+
     <h1>{{ app.session.get('quest_type') }}</h1>
-    
     {% set questType = app.session.get('quest_type') %}
 
-    {% if questType == 'Porta un tesoro a un mio associato' %}
-        <p>Dettagli specifici per "Porta un tesoro a un mio associato".</p>
-    {% elseif questType == 'Trovami gli ingredienti per un mistico unguento' %}
-        <p>Dettagli specifici per "Trovami gli ingredienti per un mistico unguento".</p>
-    {% elseif questType == 'Recupera l\'oggetto che ci fu rubato' %}
-        <p>Dettagli specifici per "Recupera l'oggetto che ci fu rubato".</p>
-    {% elseif questType == 'Salva una persona rapita' %}
-        <p>Dettagli specifici per "Salva una persona rapita".</p>
-    {% elseif questType == 'Sbarazzaci di un nemico' %}
-        <p>Dettagli specifici per "Sbarazzaci di un nemico".</p>
-    {% else %}
-        <p>Dettagli generali per altre quest.</p>
+    
+
+    {% if questType == 'Porta un tesoro a un mio associato' or questType == "Bring a treasure to an associate"%}
+        <h3>l'item selezionato da trasportare è {{ item['id'] }} - {{ item['title'] }} (lvl. {{ item['rarity'] }})</h3>
+        <h3>il quest reciver è {{ quest_reciver['id'] }} - {{ quest_reciver['title'] }} ({{ quest_reciver['organization'] }})</h3>
+
+
+
+    {% elseif questType == 'Trovami gli ingredienti per un mistico unguento' or questType == "Fetch me the ingredients"%}
+        <h3>l'item selezionato è {{ item['id'] }} - {{ item['title'] }} (lvl. {{ item['rarity'] }})</h3>
+        {% if item['1itemid'] is not empty %}
+            <h5>item composto da : {{ item['1itemid'] }}</h5>
+        {% endif %}
+        {% if item['2itemid'] is not empty %}
+            <h5>item composto da : {{ item['2itemid'] }}</h5>
+        {% endif %}
+        {% if item['3itemid'] is not empty %}
+            <h5>item composto da : {{ item['3itemid'] }}</h5>
+        {% endif %}
+        {% if item['4itemid'] is not empty %}
+            <h5>item composto da : {{ item['4itemid'] }}</h5>
+        {% endif %}
+        {% if item['5itemid'] is not empty %}
+            <h5>item composto da : {{ item['5itemid'] }}</h5>
+        {% endif %}
+
+
+    {% elseif questType == 'Recupera l\'oggetto che ci fu rubato' or questType == "Retrieve the stolen item"%}
+        <h3>l'item selezionato da recuperare è {{ item['id'] }} - {{ item['title'] }} (lvl. {{ item['rarity'] }})</h3>
+
+
+
+    {% elseif questType == 'Salva una persona rapita' or questType == "Save the kidnapped associate" %}
+        <h3>l'npc da salvare è - {{ npc['id'] }} - {{ npc['title'] }} ({{ npc['organization'] }}, lvl.{{ npc['socialRank'] }})</h3>
+
+
+
+    {% elseif questType == 'Sbarazzaci di un nemico' or questType == "Dispatch my enemy"%}
+        <h3>il nemico da eliminare è - {{ enemy['id'] }} - {{ enemy['title'] }} ({{ enemy['organization'] }}, lvl.{{ enemy['socialRank'] }})</h3>
+
+
     {% endif %}
     
-    <h2>l'item selezionato è {{ item['id'] }} - {{ item['title'] }} (lvl. {{ item['rarity'] }})</h2>
-    <h2>il quest reciver è {{ quest_reciver['id'] }} - {{ quest_reciver['title'] }} ({{ quest_reciver['organization'] }})</h2>
-
+    
     <a href="{{ path('accept') }}">
         <button type="submit">Accetta quest</button>
     </a>
