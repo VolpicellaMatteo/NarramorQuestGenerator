@@ -72,20 +72,16 @@ class DatabaseService
     }
 
     
-
-
-    //LEVEL CONVERSION
+    //GET HIDING PLACE
     //___________________________________________________________________________________________________________
-
-    public function convertLevelToQuestGiver($player_level)
-    {
-
+    public function getHidingPlaces(){
+        $query = $this->pdo->query("SELECT stringa FROM menu_hidingplace");
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex]['stringa'];
     }
-
-    public function convertLevelToItemRarity($player_level)
-    {
-        
-    }
+    
+    
 
 
     //BRING ITEM
@@ -99,12 +95,59 @@ class DatabaseService
         return $result;
     }
 
+    public function getQReciverRoom($org, $idPlayer){
+        $query = $this->pdo->query(
+            "SELECT rooms.title, rooms.faction, rooms.place, rooms.building 
+            FROM rooms
+            JOIN players
+            ON players.level = rooms.level
+            WHERE players.id = $idPlayer
+            AND rooms.faction = '$org'");
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            $randomIndex = array_rand($results);
+            return $results[$randomIndex];
+    }
+
 
     //return random item compatibile con l'organizzazione dell'npc e il livello del player
-    public function getNpcCompatibleItem($org,$idPlayer):array
+    public function getNpcCompatibleItem($org, $idPlayer): array
     {
-        $query = $this->pdo->query(
-            "SELECT items.id,items.title,items.rarity
+    // Funzione per ottenere i risultati della query
+    //function fetchItems($pdo, $org, $idPlayer, $hidingPlace) {
+        // $stmt = $pdo->prepare(
+        //     "SELECT items.id, items.title, items.rarity
+        //     FROM items
+        //     JOIN levels
+        //     ON items.rarity >= levels.questObjectRarityMin
+        //     AND items.rarity <= levels.questObjectRarityMax
+        //     JOIN players
+        //     ON players.level = levels.stringa
+        //     WHERE players.id = $idPlayer
+        //     AND items.questobject = 1 
+        //     AND items.$org = 1
+        //     AND items.$hidingPlace = 1"
+        // );
+        // $result =  $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //}
+    
+    // Ottieni i risultati iniziali
+    //$results = fetchItems($this->pdo, $org, $idPlayer, $hidingPlace);
+    
+    // Continua a cercare fino a quando non trovi risultati
+    // while (empty($results)) {
+    //     $hidingPlaceResult = $this->pdo->query("SELECT stringa FROM menu_hidingplace");
+    //     $r = $hidingPlaceResult->fetchAll(PDO::FETCH_ASSOC);
+    //     $randomIndex = array_rand($r);
+    //     $hidingPlace = $r[$randomIndex];
+    //     $results = fetchItems($this->pdo, $org, $idPlayer, $hidingPlace['stringa']);
+    // }
+    
+    // Seleziona un indice casuale
+    // $randomIndex = array_rand($results);
+    // return $results[$randomIndex];
+
+    $query = $this->pdo->query(
+        "SELECT items.id, items.title, items.rarity
             FROM items
             JOIN levels
             ON items.rarity >= levels.questObjectRarityMin
@@ -114,11 +157,12 @@ class DatabaseService
             WHERE players.id = $idPlayer
             AND items.questobject = 1 
             AND items.$org = 1"
-        );
-        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-        $randomIndex = array_rand($results);
-        return $results[$randomIndex];
-    }
+    );
+    $results = $query->fetchAll(PDO::FETCH_ASSOC);
+    $randomIndex = array_rand($results);
+    return $results[$randomIndex];
+}
+
 
     //return quest reciver based on quest giver org compatibility
     public function getQuestReciver($org):array
@@ -163,6 +207,48 @@ class DatabaseService
         }
     }
 
+    public function getItemCollocation($hidingPlace,$idPlayer,$titleItem){
+        $query = $this->pdo->query(
+        "SELECT 
+        rooms.title, 
+        rooms.faction, 
+        rooms.place, 
+        rooms.building,
+        '' AS whereinwilderness1, 
+        '' AS whereinwilderness2, 
+        '' AS whereinwilderness3, 
+        '' AS whereinwilderness4,
+        0 AS specialwilderness
+        FROM rooms
+        JOIN players ON players.level = rooms.level
+        JOIN items ON rooms.$hidingPlace = items.$hidingPlace
+        WHERE players.id = $idPlayer
+        AND rooms.$hidingPlace = 1
+        
+        UNION
+        
+        SELECT 
+            '' AS title, 
+            '' AS faction, 
+            '' AS place, 
+            '' AS building,
+            IFNULL(items.whereinwilderness1, '') AS whereinwilderness1, 
+            IFNULL(items.whereinwilderness2, '') AS whereinwilderness2, 
+            IFNULL(items.whereinwilderness3, '') AS whereinwilderness3, 
+            IFNULL(items.whereinwilderness4, '') AS whereinwilderness4,
+            IFNULL(items.specialwilderness, 0) AS specialwilderness
+        FROM items
+        WHERE items.specialwilderness = 1
+        AND items.title = '$titleItem'
+        ");
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        //dump($results);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    } 
+
+    
+
     //SAVE KIDNAPPED NPC
     //___________________________________________________________________________________________________________
 
@@ -187,7 +273,22 @@ class DatabaseService
 
     //GET STOLEN ITEM
     //___________________________________________________________________________________________________________
-
+    public function getItemRoom($hidingPlace,$idPlayer){
+        $results = [];
+        while($results == null)
+        {
+            $query = $this->pdo->query(
+            "SELECT rooms.title, rooms.faction, rooms.place, rooms.building 
+            FROM rooms
+            JOIN players ON players.level = rooms.level
+            JOIN items ON rooms.$hidingPlace = items.$hidingPlace
+            WHERE players.id = $idPlayer
+            AND rooms.$hidingPlace = 1");
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    } 
 
     //DISPATCH ENEMY
     //___________________________________________________________________________________________________________

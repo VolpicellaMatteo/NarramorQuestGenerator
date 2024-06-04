@@ -28,22 +28,30 @@ class ChooseController extends AbstractController
     public function index(Request $request,DatabaseService $databaseService,SessionInterface $session): Response
     {
     
+    
+
     $session = $request->getSession();
     $session->set('idplayer' , $_POST['player']);
     //$session->set('places' , $_POST['places']);
     $session->set('idnpc',$_POST['npc']);
     $session->set('quest_type' , $_POST['quest_type']);
     $session->set('language', $databaseService->getPlayerLanguage($_POST['player']));
+   //$session->set('hidingPlace', $databaseService->getHidingPlaces());
+    
 
     $idplayer = $session->get('idplayer');
     $idnpc = $session->get('idnpc');
     $questType = $session->get('quest_type');
+    //$hidingPlace = $session->get('hidingPlace');
+    $language = $session->get('language');
+
+    //var_dump($hidingPlace);
     
     switch($questType){
         case "Porta un tesoro a un mio associato":
         case "Bring a treasure to an associate":
             $bringItem = new Bring_item($idplayer , $idnpc);
-            $params = $bringItem->generateQuest($databaseService);
+            $params = $bringItem->generateQuest($databaseService,$session);
             //$item = $this->randomBringItem($items);
             break;
 
@@ -56,7 +64,7 @@ class ChooseController extends AbstractController
         case "Recupera l'oggetto che ci fu rubato":
         case "Retrieve the stolen item":
             $getStolenItem = new Get_stolen_item($idplayer, $idnpc);
-            $params = $getStolenItem->generateQuest($databaseService);
+            $params = $getStolenItem->generateQuest($databaseService,$session);
             break;
 
         case "Salva una persona rapita":
@@ -77,17 +85,6 @@ class ChooseController extends AbstractController
 
     return $this->render('main/choose.html.twig',$params);
 
-    }
-
-    public function randomBringItem($array): string
-    {
-        if (empty($array)) {
-            return ''; 
-        }
-
-        $randomIndex = array_rand($array);
-
-        return $array[$randomIndex];
     }
 
 }
