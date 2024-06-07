@@ -5,12 +5,12 @@
 {% block content %}
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
        
-    <p>
+    {# <p>
     {{ app.session.get('player') }}<br>
-    {# {{ app.session.get('places') }}<br> #}
+    {# {{ app.session.get('places') }}<br> 
     {{ app.session.get('npc') }}<br>
     {{ app.session.get('quest_type') }}<br>
-    </p>
+    </p> #}
 
     <a href="{{ path('reward') }}">
         <button type="submit">Termina quest</button>

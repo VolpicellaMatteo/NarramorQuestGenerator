@@ -207,47 +207,192 @@ class DatabaseService
         }
     }
 
-    public function getItemCollocation($hidingPlace,$idPlayer,$titleItem){
-        $query = $this->pdo->query(
-        "SELECT 
-        rooms.title, 
-        rooms.faction, 
-        rooms.place, 
-        rooms.building,
-        '' AS whereinwilderness1, 
-        '' AS whereinwilderness2, 
-        '' AS whereinwilderness3, 
-        '' AS whereinwilderness4,
-        0 AS specialwilderness
-        FROM rooms
-        JOIN players ON players.level = rooms.level
-        JOIN items ON rooms.$hidingPlace = items.$hidingPlace
-        WHERE players.id = $idPlayer
-        AND rooms.$hidingPlace = 1
-        
-        UNION
-        
-        SELECT 
-            '' AS title, 
-            '' AS faction, 
-            '' AS place, 
-            '' AS building,
-            IFNULL(items.whereinwilderness1, '') AS whereinwilderness1, 
-            IFNULL(items.whereinwilderness2, '') AS whereinwilderness2, 
-            IFNULL(items.whereinwilderness3, '') AS whereinwilderness3, 
-            IFNULL(items.whereinwilderness4, '') AS whereinwilderness4,
-            IFNULL(items.specialwilderness, 0) AS specialwilderness
-        FROM items
-        WHERE items.specialwilderness = 1
-        AND items.title = '$titleItem'
+    public function getItemCollocation($idPlayer, $titleItem, $playerLevel) {
+        $query1 = $this->pdo->query(
+            "SELECT 
+                r.title, 
+                r.faction, 
+                r.place, 
+                r.building,
+                '' AS whereinwilderness1, 
+                '' AS whereinwilderness2, 
+                '' AS whereinwilderness3, 
+                '' AS whereinwilderness4,
+                0 AS specialwilderness,
+                h.stringa AS hidingPlace
+            FROM 
+                items AS i
+            JOIN 
+                rooms AS r ON (
+                    (i.weaponsrack = r.weaponsrack) OR
+                    (i.chestofdrawers = r.chestofdrawers) OR
+                    (i.chest = r.chest) OR
+                    (i.coffer = r.coffer) OR
+                    (i.bookshelf = r.bookshelf) OR
+                    (i.deskdrawer = r.deskdrawer) OR
+                    (i.sarcophagus = r.sarcophagus) OR
+                    (i.ark = r.ark) OR
+                    (i.fireplace = r.fireplace) OR
+                    (i.kitchenshelf = r.kitchenshelf) OR
+                    (i.labshelf = r.labshelf) OR
+                    (i.bed = r.bed) OR
+                    (i.barrel = r.barrel) OR
+                    (i.sack = r.sack) OR
+                    (i.bag = r.bag) OR
+                    (i.altar = r.altar) OR
+                    (i.well = r.well) OR
+                    (i.animalcage = r.animalcage) OR
+                    (i.skeletoncorpse = r.skeletoncorpse)
+                )
+            JOIN 
+                menu_hidingplace AS h ON (
+                    (h.stringa = 'weaponsrack' AND r.weaponsrack = '1') OR
+                    (h.stringa = 'chestofdrawers' AND r.chestofdrawers = '1') OR
+                    (h.stringa = 'chest' AND r.chest = '1') OR
+                    (h.stringa = 'coffer' AND r.coffer = '1') OR
+                    (h.stringa = 'bookshelf' AND r.bookshelf = '1') OR
+                    (h.stringa = 'deskdrawer' AND r.deskdrawer = '1') OR
+                    (h.stringa = 'sarcophagus' AND r.sarcophagus = '1') OR
+                    (h.stringa = 'ark' AND r.ark = '1') OR
+                    (h.stringa = 'fireplace' AND r.fireplace = '1') OR
+                    (h.stringa = 'kitchenshelf' AND r.kitchenshelf = '1') OR
+                    (h.stringa = 'labshelf' AND r.labshelf = '1') OR
+                    (h.stringa = 'bed' AND r.bed = '1') OR
+                    (h.stringa = 'barrel' AND r.barrel = '1') OR
+                    (h.stringa = 'sack' AND r.sack = '1') OR
+                    (h.stringa = 'bag' AND r.bag = '1') OR
+                    (h.stringa = 'altar' AND r.altar = '1') OR
+                    (h.stringa = 'well' AND r.well = '1') OR
+                    (h.stringa = 'animalcage' AND r.animalcage = '1') OR
+                    (h.stringa = 'skeletoncorpse' AND r.skeletoncorpse = '1')
+                )
+            JOIN 
+                players 
+            ON
+                players.level = r.level
+            WHERE 
+                i.title = '$titleItem'
+            AND 
+                r.level <= '$playerLevel'
+            AND
+                players.id = '$idPlayer'
         ");
-        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-        //dump($results);
+    
+        $query2 = $this->pdo->query(
+            "SELECT 
+                '' AS title, 
+                '' AS faction, 
+                '' AS place, 
+                '' AS building,
+                IFNULL(items.whereinwilderness1, '') AS whereinwilderness1, 
+                IFNULL(items.whereinwilderness2, '') AS whereinwilderness2, 
+                IFNULL(items.whereinwilderness3, '') AS whereinwilderness3, 
+                IFNULL(items.whereinwilderness4, '') AS whereinwilderness4,
+                IFNULL(items.specialwilderness, 0) AS specialwilderness,
+                '' AS hidingPlace
+            FROM 	
+                items
+            WHERE
+                items.specialwilderness = 1
+            AND 
+                items.title = '$titleItem'
+        ");
+    
+        $results1 = $query1->fetchAll(PDO::FETCH_ASSOC);
+        $results2 = $query2->fetchAll(PDO::FETCH_ASSOC);
+    
+        $availableResults = array();
+    
+        if (!empty($results1)) {
+            $availableResults[] = $results1;
+        }
+    
+        if (!empty($results2)) {
+            $availableResults[] = $results2;
+        }
+        
+        //dump($availableResults);
+        if (!empty($availableResults)) {
+            // Select a random array from the available results
+            $selectedArray = $availableResults[array_rand($availableResults)];
+            // Select a random item from the selected array
+            $randomIndex = array_rand($selectedArray);
+            return $selectedArray[$randomIndex];
+        } else {
+            return null;
+        }
+    }
+    
+    //GET STOLEN ITEM
+    //___________________________________________________________________________________________________________
+    public function getItemRoom($titleItem,$playerLevel){
+        $results = [];
+        while($results == null)
+        {
+            $query = $this->pdo->query(
+            "SELECT
+                r.faction,
+                r.title,
+                r.place,
+                r.building,
+                h.stringa AS hidingPlace
+            FROM 
+                items AS i
+            JOIN 
+                rooms AS r ON (
+                    (i.weaponsrack = r.weaponsrack) OR
+                    (i.chestofdrawers = r.chestofdrawers) OR
+                    (i.chest = r.chest) OR
+                    (i.coffer = r.coffer) OR
+                    (i.bookshelf = r.bookshelf) OR
+                    (i.deskdrawer = r.deskdrawer) OR
+                    (i.sarcophagus = r.sarcophagus) OR
+                    (i.ark = r.ark) OR
+                    (i.fireplace = r.fireplace) OR
+                    (i.kitchenshelf = r.kitchenshelf) OR
+                    (i.labshelf = r.labshelf) OR
+                    (i.bed = r.bed) OR
+                    (i.barrel = r.barrel) OR
+                    (i.sack = r.sack) OR
+                    (i.bag = r.bag) OR
+                    (i.altar = r.altar) OR
+                    (i.well = r.well) OR
+                    (i.animalcage = r.animalcage) OR
+                    (i.skeletoncorpse = r.skeletoncorpse)
+                )
+            JOIN 
+                menu_hidingplace AS h ON (
+                    (h.stringa = 'weaponsrack' AND r.weaponsrack = '1') OR
+                    (h.stringa = 'chestofdrawers' AND r.chestofdrawers = '1') OR
+                    (h.stringa = 'chest' AND r.chest = '1') OR
+                    (h.stringa = 'coffer' AND r.coffer = '1') OR
+                    (h.stringa = 'bookshelf' AND r.bookshelf = '1') OR
+                    (h.stringa = 'deskdrawer' AND r.deskdrawer = '1') OR
+                    (h.stringa = 'sarcophagus' AND r.sarcophagus = '1') OR
+                    (h.stringa = 'ark' AND r.ark = '1') OR
+                    (h.stringa = 'fireplace' AND r.fireplace = '1') OR
+                    (h.stringa = 'kitchenshelf' AND r.kitchenshelf = '1') OR
+                    (h.stringa = 'labshelf' AND r.labshelf = '1') OR
+                    (h.stringa = 'bed' AND r.bed = '1') OR
+                    (h.stringa = 'barrel' AND r.barrel = '1') OR
+                    (h.stringa = 'sack' AND r.sack = '1') OR
+                    (h.stringa = 'bag' AND r.bag = '1') OR
+                    (h.stringa = 'altar' AND r.altar = '1') OR
+                    (h.stringa = 'well' AND r.well = '1') OR
+                    (h.stringa = 'animalcage' AND r.animalcage = '1') OR
+                    (h.stringa = 'skeletoncorpse' AND r.skeletoncorpse = '1') 
+                )
+            WHERE 
+                i.title = '$titleItem'
+            AND 
+                r.level <= '$playerLevel'"
+            );
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        }
         $randomIndex = array_rand($results);
         return $results[$randomIndex];
     } 
 
-    
 
     //SAVE KIDNAPPED NPC
     //___________________________________________________________________________________________________________
@@ -271,25 +416,49 @@ class DatabaseService
         return $results[$randomIndex];
     }
 
-    //GET STOLEN ITEM
-    //___________________________________________________________________________________________________________
-    public function getItemRoom($hidingPlace,$idPlayer){
-        $results = [];
-        while($results == null)
-        {
-            $query = $this->pdo->query(
-            "SELECT rooms.title, rooms.faction, rooms.place, rooms.building 
-            FROM rooms
-            JOIN players ON players.level = rooms.level
-            JOIN items ON rooms.$hidingPlace = items.$hidingPlace
-            WHERE players.id = $idPlayer
-            AND rooms.$hidingPlace = 1");
-            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+    public function getEnemyOrg($org, $idPlayer)
+    {
+        $levelPlayer = $this->getPlayerLevel($idPlayer);
+        $query = $this->pdo->query(
+            "SELECT factions.title, npc.socialRank
+            FROM npc
+            JOIN factions 
+            ON npc.organization LIKE factions.stringa
+            JOIN levels
+            ON npc.socialRank >= questGiverMin
+            AND npc.socialRank <= questGiverMax
+            WHERE levels.stringa LIKE '$levelPlayer'
+            AND factions.relation_$org < 0"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($results)) {
+            return null;
         }
+
         $randomIndex = array_rand($results);
         return $results[$randomIndex];
-    } 
+    }
 
+    public function getKidnappedNpcRoom($enemyOrg, $playerLevel)
+    {
+        $query = $this->pdo->query(
+            "SELECT rooms.title, rooms.place, rooms.building, rooms.level, rooms.faction
+            FROM rooms
+            WHERE rooms.faction = '$enemyOrg'
+            AND rooms.level <= '$playerLevel'"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($results)) {
+            return null;
+        }
+
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    }
+
+    
     //DISPATCH ENEMY
     //___________________________________________________________________________________________________________
 
@@ -301,6 +470,18 @@ class DatabaseService
             JOIN factions
             ON npc.organization LIKE factions.title
             AND factions.relation_$org <0"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    }
+
+    public function getEnemyRoom($enemyOrg)
+    {
+        $query = $this->pdo->query(
+            "SELECT rooms.place, rooms.building, rooms.level, rooms.title
+            FROM rooms
+            WHERE rooms.faction = '$enemyOrg'"
         );
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
         $randomIndex = array_rand($results);

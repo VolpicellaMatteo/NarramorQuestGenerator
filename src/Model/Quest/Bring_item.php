@@ -9,12 +9,14 @@ class Bring_item
 {
     private $idplayer;
     private $idnpc;
+    private $language;
 
 
-    public function __construct($player, $npc)
+    public function __construct($player, $npc, $language)
     {
         $this->idplayer = $player;
         $this->idnpc = $npc;
+        $this->language = $language;
     }
 
 

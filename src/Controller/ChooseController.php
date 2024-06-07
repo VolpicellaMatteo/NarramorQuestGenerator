@@ -50,32 +50,32 @@ class ChooseController extends AbstractController
     switch($questType){
         case "Porta un tesoro a un mio associato":
         case "Bring a treasure to an associate":
-            $bringItem = new Bring_item($idplayer , $idnpc);
+            $bringItem = new Bring_item($idplayer , $idnpc, $language);
             $params = $bringItem->generateQuest($databaseService,$session);
             //$item = $this->randomBringItem($items);
             break;
 
         case "Trovami gli ingredienti per un mistico unguento":
         case "Fetch me the ingredients":
-            $fetchItem = new Fetch_item($idplayer, $idnpc);
+            $fetchItem = new Fetch_item($idplayer, $idnpc, $language);
             $params = $fetchItem->generateQuest($databaseService);
             break;
 
         case "Recupera l'oggetto che ci fu rubato":
         case "Retrieve the stolen item":
-            $getStolenItem = new Get_stolen_item($idplayer, $idnpc);
+            $getStolenItem = new Get_stolen_item($idplayer, $idnpc, $language);
             $params = $getStolenItem->generateQuest($databaseService,$session);
             break;
 
         case "Salva una persona rapita":
         case "Save the kidnapped associate":
-            $saveKidnappedNpc = new Save_kidanapped_npc($idplayer, $idnpc);
+            $saveKidnappedNpc = new Save_kidanapped_npc($idplayer, $idnpc, $language);
             $params = $saveKidnappedNpc->generateQuest($databaseService);
             break;
 
         case "Sbarazzaci di un nemico":
         case "Dispatch my enemy":
-            $dispatchEnemy = new Dispatch_enemy($idplayer, $idnpc);
+            $dispatchEnemy = new Dispatch_enemy($idplayer, $idnpc, $language);
             $params = $dispatchEnemy->generateQuest($databaseService);
             break;
 

@@ -7,14 +7,16 @@ class Fetch_item
 {
     private $idplayer;
     private $idnpc;
+    private $language;
     // private $hidingPlace;
 
 
 
-    public function __construct($player, $npc)
+    public function __construct($player, $npc, $language)
     {
         $this->idplayer = $player;
         $this->idnpc = $npc;
+        $this->language = $language;
     }
 
     public function generateQuest(DatabaseService $databaseService)
@@ -22,49 +24,34 @@ class Fetch_item
             //prendo tutti gli item compatibili con l'organizzazione del'npc
             $npcOrg = $databaseService->getNpcOrg($this->idnpc);
             $item = $databaseService->getCraftableItem($npcOrg, $this->idplayer);
+            $playerLevel = $databaseService->getPlayerLevel($this->idplayer);
     
             if($item['1itemid'] != ''){
-                $hidingPlace = $databaseService->getHidingPlaces();
-                $itemid1 = $databaseService->getItemCollocation($hidingPlace, $this->idplayer, $item['1itemid']);           
+                $itemid1 = $databaseService->getItemCollocation($this->idplayer, $item['1itemid'], $playerLevel);             
             }
             else{
                 $itemid1 = '';
             }
-            if (is_array($itemid1)) {
-                $itemid1['hidingPlace'] = $hidingPlace;
-            }
-    
+
             if($item['2itemid'] != ''){
-                $hidingPlace = $databaseService->getHidingPlaces();
-                $itemid2 = $databaseService->getItemCollocation($hidingPlace, $this->idplayer, $item['2itemid']);           
+                $itemid2 = $databaseService->getItemCollocation($this->idplayer, $item['2itemid'], $playerLevel);            
             }
             else{
                 $itemid2 = '';
             }
-            if (is_array($itemid2)) {
-                $itemid2['hidingPlace'] = $hidingPlace;
-            }
     
             if($item['3itemid'] != ''){
-                $hidingPlace = $databaseService->getHidingPlaces();
-                $itemid3 = $databaseService->getItemCollocation($hidingPlace, $this->idplayer, $item['3itemid']);           
+                $itemid3 = $databaseService->getItemCollocation($this->idplayer, $item['3itemid'], $playerLevel);           
             }
             else{
                 $itemid3 = '';
             }
-            if (is_array($itemid3)) {
-                $itemid3['hidingPlace'] = $hidingPlace;
-            }
     
             if($item['4itemid'] != ''){
-                $hidingPlace = $databaseService->getHidingPlaces();
-                $itemid4 = $databaseService->getItemCollocation($hidingPlace, $this->idplayer, $item['4itemid']);           
+                $itemid4 = $databaseService->getItemCollocation($this->idplayer, $item['4itemid'], $playerLevel);           
             }
             else{
                 $itemid4 = '';
-            }
-            if (is_array($itemid4)) {
-                $itemid4['hidingPlace'] = $hidingPlace;
             }
 
             $params = [
@@ -75,6 +62,7 @@ class Fetch_item
                 'itemid4' => $itemid4
             ];
             
+        
         //dump($params);
         return $params;
         }

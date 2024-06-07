@@ -8,13 +8,15 @@ class Get_stolen_item
 {
     private $idplayer;
     private $idnpc;
+    private $language;
     //private $hidingPlace;
 
 
-    public function __construct($player, $npc)
+    public function __construct($player, $npc, $language)
     {
         $this->idplayer = $player;
         $this->idnpc = $npc;
+        $this->language = $language;
     }
     
 
@@ -25,7 +27,9 @@ class Get_stolen_item
         //prendo tutti gli item compatibili con l'organizzazione del'npc
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
         $item = $databaseService->getNpcCompatibleItem($npcOrg,$this->idplayer);
-        $room = $databaseService->getItemRoom($hidingPlace ,$this->idplayer);
+        $playerLevel = $databaseService->getPlayerLevel($this->idplayer);
+        
+        $room = $databaseService->getItemRoom($item['title'] ,$playerLevel);
         
         $params = [
             'item'=> $item,
