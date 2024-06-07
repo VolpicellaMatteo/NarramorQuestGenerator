@@ -71,14 +71,18 @@ class DatabaseService
         return $results;
     }
 
-    
-    //GET HIDING PLACE
-    //___________________________________________________________________________________________________________
-    public function getHidingPlaces(){
-        $query = $this->pdo->query("SELECT stringa FROM menu_hidingplace");
-        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-        $randomIndex = array_rand($results);
-        return $results[$randomIndex]['stringa'];
+    public function getItemType($idItem)
+    {
+        $query = $this->pdo->query("SELECT type FROM items WHERE id = $idItem");
+        $result = $query->fetchColumn(); 
+        return $result;
+    }
+
+    public function getItemSubType($idItem)
+    {
+        $query = $this->pdo->query("SELECT subType FROM items WHERE id = $idItem");
+        $result = $query->fetchColumn(); 
+        return $result;
     }
     
     
@@ -93,19 +97,6 @@ class DatabaseService
         $query = $this->pdo->query("SELECT organization FROM npc WHERE id = $idNpc");
         $result = $query->fetchColumn(); // Restituisce direttamente il valore della colonna 'organization'
         return $result;
-    }
-
-    public function getQReciverRoom($org, $idPlayer){
-        $query = $this->pdo->query(
-            "SELECT rooms.title, rooms.faction, rooms.place, rooms.building 
-            FROM rooms
-            JOIN players
-            ON players.level = rooms.level
-            WHERE players.id = $idPlayer
-            AND rooms.faction = '$org'");
-            $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            $randomIndex = array_rand($results);
-            return $results[$randomIndex];
     }
 
 
@@ -147,7 +138,7 @@ class DatabaseService
     // return $results[$randomIndex];
 
     $query = $this->pdo->query(
-        "SELECT items.id, items.title, items.rarity
+        "SELECT items.id, items.title, items.rarity, items.type, items.subType
             FROM items
             JOIN levels
             ON items.rarity >= levels.questObjectRarityMin
@@ -174,6 +165,37 @@ class DatabaseService
             ON npc.organization LIKE factions.title
             WHERE factions.title LIKE relation_$org >=0"
         );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    }
+
+    
+    public function getQReciverRoom($org, $idPlayer){
+        $query = $this->pdo->query(
+            "SELECT rooms.title, rooms.faction, rooms.place, rooms.building 
+            FROM rooms
+            JOIN players
+            ON players.level = rooms.level
+            WHERE players.id = $idPlayer
+            AND rooms.faction = '$org'");
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    }
+
+    public function getBringItemWhy($idItem)
+    {
+        $itemType =  $this->getItemType($idItem);
+        $subType =  $this->getItemSubType($idItem);
+
+        $query = $this->pdo->query(
+            "SELECT qt1.why
+            FROM quest_type1_why AS qt1
+            WHERE  ( qt1.itemType = '$itemType' OR qt1.itemType = '')
+            AND    ( qt1.subType = '$subType' OR qt1.subType = '')
+            AND    ( qt1.itemType != '' OR  qt1.subType != '') "
+            );
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
         $randomIndex = array_rand($results);
         return $results[$randomIndex];

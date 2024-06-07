@@ -29,11 +29,14 @@ class Bring_item
         $questReciver = $databaseService->getQuestReciver($npcOrg);
         $qReciverOrg = $databaseService->getNpcOrg($questReciver["id"]);
         $qReciverRoom = $databaseService->getQReciverRoom(strtolower($qReciverOrg),$this->idplayer);
+        //dump($item);
+        $why = $databaseService->getBringItemWhy($item['id']);
         
         $params = [
             'item'=> $item,
             'quest_reciver' => $questReciver,
             'qreciver_room' => $qReciverRoom,
+            'why' => $why
             //'hidingPlace' => $session->get('hidingPlace')
         ];
         
