@@ -22,8 +22,10 @@ class ChooseController extends AbstractController
     private Get_stolen_item $getStolenItem;
     private Save_kidanapped_npc $saveKidnappedNpc;
     private Dispatch_enemy $dispatchEnemy;
-
-
+    
+    /**
+     * @Route("/home", name="home")
+     */
     #[Route('/choose', name: 'choose')]
     public function index(Request $request,DatabaseService $databaseService,SessionInterface $session): Response
     {

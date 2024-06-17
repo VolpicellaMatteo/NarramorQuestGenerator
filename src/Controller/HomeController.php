@@ -19,11 +19,12 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function home(DatabaseService $databaseService,SessionInterface $session) :Response
     {
+        
          // Elimina la sessione esistente
-         $session->invalidate();
+        $session->invalidate();
 
-         // Crea una nuova sessione
-         $session->start();
+        // Crea una nuova sessione
+        $session->start();
 
         //$database = new Database("localhost","3306","Narramor","root","");
 

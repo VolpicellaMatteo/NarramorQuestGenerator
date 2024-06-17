@@ -407,8 +407,8 @@ class DatabaseService
             WHERE 
                 i.title = '$titleItem'
             AND 
-                r.level <= '$playerLevel'"
-            );
+                r.level < '$playerLevel'+1
+            ");
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
         }
         $randomIndex = array_rand($results);

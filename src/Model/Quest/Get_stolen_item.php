@@ -22,7 +22,7 @@ class Get_stolen_item
 
     public function generateQuest(DatabaseService $databaseService,SessionInterface $session)
     {
-        $hidingPlace = $databaseService->getHidingPlaces();
+        //$hidingPlace = $databaseService->getHidingPlaces();
 
         //prendo tutti gli item compatibili con l'organizzazione del'npc
         $npcOrg = $databaseService->getNpcOrg($this->idnpc);
@@ -34,7 +34,6 @@ class Get_stolen_item
         $params = [
             'item'=> $item,
             'room' => $room,
-            'hidingPlace' => $hidingPlace
         ];
         
         return $params;
