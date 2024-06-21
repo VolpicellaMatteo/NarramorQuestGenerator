@@ -3,8 +3,7 @@
 {% block title %}Quest accettata{% endblock %}
 
 {% block content %}
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-       
+    <h3>Decidi se completare la quest o abbandonarla e cercare un'altra quest</h3>  
     {# <p>
     {{ app.session.get('player') }}<br>
     {# {{ app.session.get('places') }}<br> 
@@ -13,11 +12,11 @@
     </p> #}
 
     <a href="{{ path('reward') }}">
-        <button type="submit">Termina quest</button>
+        <button type="submit">Completa e termina quest</button>
     </a>
 
     <a href="{{ path('home') }}">
-        <button type="submit">Cerca un'altra quest</button>
+        <button type="submit">Abbandona e cerca un'altra quest</button>
     </a>
 
     

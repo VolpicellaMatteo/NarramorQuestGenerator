@@ -54,18 +54,59 @@ class Fetch_item
                 $itemid4 = '';
             }
 
+            $paramString = "Tipo di quest: fetch items
+                l'\''item da craftare è {$item['title']} 
+                lista degli ingredienti:
+                {$item['1itemid'] }
+                {$item['2itemid'] }
+                {$item['3itemid'] }
+                {$item['4itemid'] }";
+            
+            $prompt = $this->getGPTquest($paramString);
+
             $params = [
                 'item'=> $item, 
                 'itemid1' => $itemid1,
                 'itemid2' => $itemid2,
                 'itemid3' => $itemid3,
-                'itemid4' => $itemid4
+                'itemid4' => $itemid4,
+                'questBot'=> $prompt['a']
             ];
+
+            //dump($params);
             
         
         //dump($params);
-        return $params;
+            return $params;
         }
+
+        
+    public function getGPTquest($params) {
+
+        $params = str_replace(array("\r", "\n"), '', $params);
+    
+        $prompt = " curl -X POST https://bankchat.accomazzi.net/rpg/q \
+            -H \"Content-Type: application/json\" \
+            -d '{
+                \"q\": \"$params\",
+                \"sid\": \"123\"
+            }'
+        ";
+    
+        $response = shell_exec($prompt);
+    
+        $data = json_decode($response, true);
+
+        // Controlla se la decodifica è riuscita correttamente
+        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            die("Errore nella decodifica del JSON");
+        }
+        
+        // Converte l'array associativo PHP in una stringa PHP formattata
+        //$stringaPHP = var_export($data, true); 
+       
+        return $data;
+    }
 
 
     // public function generateQuest(DatabaseService $databaseService)

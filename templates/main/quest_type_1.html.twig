@@ -1,0 +1,10 @@
+<p class="testo-bot">"{{ questBot }}"</p>
+<div class="div-parametri">
+    <ul class="ul-parametri">
+        <li class="li-parametri">l'item selezionato da trasportare è {{ item['id'] }} | {{ item['title'] }} (lvl. {{ item['rarity'] }})</li>
+        <li class="li-parametri">il quest reciver è |{{ quest_reciver['id'] }}  {{ quest_reciver['title'] }} ({{ quest_reciver['organization'] }})|</li>
+        <li class="li-parametri">Il quest reciver si trova in una zona controllata da |{{ qreciver_room['faction']}}|</li>
+        <li class="li-parametri">Nel |{{ qreciver_room['building']}}| di |{{ qreciver_room['place']}}|</li>
+        <li class="li-parametri">Motivo della missione:|{{why['why']}}|</li>
+    </ul>
+</div>

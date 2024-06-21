@@ -11,8 +11,13 @@ class DatabaseService
 
     //DATABASE CONNECTION
     //___________________________________________________________________________________________________________
-    public function __construct(string $host, string $port, string $dbname, string $username, string $password)
+    public function __construct()
     {
+        $host = "localhost";
+        $port = '3306';
+        $dbname = 'narramor';
+        $username = 'narramor';
+        $password = 'narramor#430';
         // Connessione al database
         $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
         $this->pdo = new PDO($dsn, $username, $password);
@@ -20,6 +25,8 @@ class DatabaseService
         // Gestione errori
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
+
+    
 
     //GET TABLES
     //___________________________________________________________________________________________________________
@@ -38,6 +45,13 @@ class DatabaseService
         $query = $this->pdo->query('SELECT id,title,socialRank FROM npc where questGiver=1');
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
         return $results;
+    }
+
+    public function getNpcTitle($id): string
+    {
+        $query = $this->pdo->query("SELECT title FROM npc where id='$id'");
+        $result = $query->fetchColumn(); 
+        return $result;
     }
 
     //get all quest type
@@ -100,9 +114,53 @@ class DatabaseService
     }
 
 
+     //return random item compatibile con l'organizzazione dell'npc e il livello del player
+     public function getNpcCompatibleItemBringItem($org, $idPlayer): array
+     {
+     
+        $query = $this->pdo->query(
+            "SELECT items.id, items.title, items.rarity, items.type, items.subType
+                FROM items
+                JOIN levels
+                ON items.rarity >= levels.questObjectRarityMin
+                AND items.rarity <= levels.questObjectRarityMax
+                JOIN players
+                ON players.level = levels.stringa
+                JOIN quest_type1_why AS qt1
+                ON ( qt1.itemType = items.type OR qt1.itemType = '')
+                AND    ( qt1.subType = items.subType OR qt1.subType = '')
+                WHERE  ( qt1.itemType = items.type OR qt1.itemType = '')
+                AND    ( qt1.subType = items.subType OR qt1.subType = '')
+                AND    ( qt1.itemType != '' OR  qt1.subType != '') 
+                AND players.id = $idPlayer
+                AND items.questobject = 1 
+                AND items.$org = 1"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    }
+
     //return random item compatibile con l'organizzazione dell'npc e il livello del player
     public function getNpcCompatibleItem($org, $idPlayer): array
     {
+    
+    $query = $this->pdo->query(
+        "SELECT items.id, items.title, items.rarity, items.type, items.subType
+            FROM items
+            JOIN levels
+            ON items.rarity >= levels.questObjectRarityMin
+            AND items.rarity <= levels.questObjectRarityMax
+            JOIN players
+            ON players.level = levels.stringa
+            WHERE players.id = $idPlayer
+            AND items.questobject = 1 
+            AND items.$org = 1"
+    );
+    $results = $query->fetchAll(PDO::FETCH_ASSOC);
+    $randomIndex = array_rand($results);
+    return $results[$randomIndex];
+
     // Funzione per ottenere i risultati della query
     //function fetchItems($pdo, $org, $idPlayer, $hidingPlace) {
         // $stmt = $pdo->prepare(
@@ -136,22 +194,6 @@ class DatabaseService
     // Seleziona un indice casuale
     // $randomIndex = array_rand($results);
     // return $results[$randomIndex];
-
-    $query = $this->pdo->query(
-        "SELECT items.id, items.title, items.rarity, items.type, items.subType
-            FROM items
-            JOIN levels
-            ON items.rarity >= levels.questObjectRarityMin
-            AND items.rarity <= levels.questObjectRarityMax
-            JOIN players
-            ON players.level = levels.stringa
-            WHERE players.id = $idPlayer
-            AND items.questobject = 1 
-            AND items.$org = 1"
-    );
-    $results = $query->fetchAll(PDO::FETCH_ASSOC);
-    $randomIndex = array_rand($results);
-    return $results[$randomIndex];
 }
 
 
@@ -347,7 +389,7 @@ class DatabaseService
     
     //GET STOLEN ITEM
     //___________________________________________________________________________________________________________
-    public function getItemRoom($titleItem,$playerLevel){
+    public function getItemRoom($titleItem, $playerLevel, $npcOrg){
         $results = [];
         while($results == null)
         {
@@ -404,10 +446,14 @@ class DatabaseService
                     (h.stringa = 'animalcage' AND r.animalcage = '1') OR
                     (h.stringa = 'skeletoncorpse' AND r.skeletoncorpse = '1') 
                 )
+            JOIN factions 
+                ON r.faction LIKE factions.stringa
             WHERE 
                 i.title = '$titleItem'
             AND 
                 r.level < '$playerLevel'+1
+            AND
+                factions.relation_$npcOrg < 0
             ");
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -418,25 +464,6 @@ class DatabaseService
 
     //SAVE KIDNAPPED NPC
     //___________________________________________________________________________________________________________
-
-    public function getKidanappedNpc($org,$idPlayer):array
-    {
-        $levelPlayer = $this-> getPlayerLevel($idPlayer);
-        $query = $this->pdo->query(
-            "SELECT npc.id , npc.title , npc.organization, npc.socialRank
-            FROM npc
-            JOIN factions 
-            ON npc.organization LIKE factions.stringa
-            JOIN levels
-            ON npc.socialRank >= questGiverMin
-            AND npc.socialRank <= questGiverMax
-            WHERE levels.stringa LIKE $levelPlayer
-            AND factions.relation_$org >=0"
-        );
-        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-        $randomIndex = array_rand($results);
-        return $results[$randomIndex];
-    }
 
     public function getEnemyOrg($org, $idPlayer)
     {
@@ -461,6 +488,27 @@ class DatabaseService
         $randomIndex = array_rand($results);
         return $results[$randomIndex];
     }
+
+    public function getKidanappedNpc($org,$idPlayer):array
+    {
+        $levelPlayer = $this-> getPlayerLevel($idPlayer);
+        $query = $this->pdo->query(
+            "SELECT npc.id , npc.title , npc.organization, npc.socialRank
+            FROM npc
+            JOIN factions 
+            ON npc.organization LIKE factions.stringa
+            JOIN levels
+            ON npc.socialRank >= questGiverMin
+            AND npc.socialRank <= questGiverMax
+            WHERE levels.stringa LIKE $levelPlayer
+            AND factions.relation_$org >=0"
+        );
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $randomIndex = array_rand($results);
+        return $results[$randomIndex];
+    }
+
+
 
     public function getKidnappedNpcRoom($enemyOrg, $playerLevel)
     {

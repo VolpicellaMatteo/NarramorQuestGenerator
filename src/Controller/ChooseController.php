@@ -34,8 +34,11 @@ class ChooseController extends AbstractController
 
     $session = $request->getSession();
     $session->set('idplayer' , $_POST['player']);
+    $session->set('playerLevel',$databaseService->getPlayerLevel($_POST['player']));
     //$session->set('places' , $_POST['places']);
     $session->set('idnpc',$_POST['npc']);
+    $npcTitle = $databaseService->getNpcTitle($_POST['npc']);
+    $session->set('npcTitle',$npcTitle);
     $session->set('quest_type' , $_POST['quest_type']);
     $session->set('language', $databaseService->getPlayerLanguage($_POST['player']));
    //$session->set('hidingPlace', $databaseService->getHidingPlaces());
@@ -43,6 +46,7 @@ class ChooseController extends AbstractController
 
     $idplayer = $session->get('idplayer');
     $idnpc = $session->get('idnpc');
+    $npcTitle = $session->get('npcTitle');
     $questType = $session->get('quest_type');
     //$hidingPlace = $session->get('hidingPlace');
     $language = $session->get('language');

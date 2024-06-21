@@ -3,9 +3,18 @@
 {% block title %}Quest terminata{% endblock %}
 
 {% block content %}
-    <h1>Ricompense</h1>
+    <div class="rewards-container">
+        <h1>Rewards</h1>
+        
+        <div class="rewards-details">
+            <p class="reward">Livello: <span class="reward-value">{{ level }}</span></p>
+            <p class="reward">Monete d'argento: <span class="reward-value">{{ coin }}</span></p>
+            <p class="reward">Punti esperienza: <span class="reward-value">{{ exp }}</span></p>
+            
+        </div>
 
-    <a href="{{ path('home') }}">
-        <button type="submit">Cerca un'altra quest</button>
-    </a>
+        <a href="{{ path('home') }}">
+            <button type="submit" >Cerca un'altra quest</button>
+        </a>
+    </div>
 {% endblock %}

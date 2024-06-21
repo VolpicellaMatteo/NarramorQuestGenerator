@@ -3,8 +3,21 @@
 {% block title %}Scegli la tua quest{% endblock %}
 
 {% block content %}
+    <div class="ccontainer-all">
+   
+        <div class="container-begin-image">
+            <img src="{{ asset('/image/Narramor-Logo.webp') }}" alt="logo" class="image-logo">
+        </div>
+        <div class="container-image-title">
+            <h2 class="title-first-quest">Scegli e genera la quest</h2>
+            <img src="{{ asset('/image/narramor_dragon.png') }}" alt="logo-title" class="image-title">
+        </div>
+        
+     <div class="container-separator">
+       <img src="{{ asset('/image/line.png') }}" alt="logo-title" class="line">
+        </div>
     
-    <form action="{{ path('choose') }}" method="post">
+        <form action="{{ path('choose') }}" method="post">
         <div class="player">
             <label for="player">Player:</label>
             <select name="player" id="player">
@@ -48,88 +61,96 @@
             </select>
         </div>
 
-        <div class="quest_type">
-            <label for="quest_type" id="quest_type">Tipo di quest:</label>
-                {% for quest in quest_type %}
-                    <input type="checkbox" name="quest_type" value="{{ quest['title'] }}" language="{{ quest['language']}}" idCH="{{ quest['id'] }}">
-                    <div id="{{ quest['id'] }}">{{ quest['title'] }}</div>
-                    </input>
-                {% endfor %}
+       <div class="quest_type">
+    <label for="quest_type" id="quest_type">Tipo di quest:</label>
+    {% for quest in quest_type %}
+    <div class="container-input">
+        <label class="pointer">
+            <input type="checkbox" name="quest_type" value="{{ quest['title'] }}" language="{{ quest['language']}}" idCH="{{ quest['id'] }}">
+            <div id="{{ quest['id'] }}">{{ quest['title'] }}</div>
+        </label>
+    </div>
+    {% endfor %}
+</div>
+
+        
+ <div class="container-separator">
+       <img src="{{ asset('/image/line.png') }}" alt="logo-title" class="line">
         </div>
-        
-
         <button type="submit" >Genera quest</button>
-
-        <script>
         
-        document.addEventListener('DOMContentLoaded', () => 
-        {
-            const personaggiSelect = document.getElementById('player');
-            const npcSelect = document.getElementById('npc');
+    </div>
+
+            <script>
             
-            personaggiSelect.addEventListener('change', () => 
+            document.addEventListener('DOMContentLoaded', () => 
             {
-                const selectedOption = personaggiSelect.options[personaggiSelect.selectedIndex];
-                const maxLevel = parseInt(selectedOption.getAttribute('data-max-level'), 10);
-                const minLevel = parseInt(selectedOption.getAttribute('data-min-level'), 10);
+                const personaggiSelect = document.getElementById('player');
+                const npcSelect = document.getElementById('npc');
+                
+                personaggiSelect.addEventListener('change', () => 
+                {
+                    const selectedOption = personaggiSelect.options[personaggiSelect.selectedIndex];
+                    const maxLevel = parseInt(selectedOption.getAttribute('data-max-level'), 10);
+                    const minLevel = parseInt(selectedOption.getAttribute('data-min-level'), 10);
 
-                for (let i = 0; i < npcSelect.options.length; i++) {
-                    const option = npcSelect.options[i];
-                    const level = parseInt(option.getAttribute('level'), 10);
+                    for (let i = 0; i < npcSelect.options.length; i++) {
+                        const option = npcSelect.options[i];
+                        const level = parseInt(option.getAttribute('level'), 10);
 
-                    if (level >= minLevel && level <= maxLevel) {
-                        option.style.display = 'block';
-                    } else {
-                        option.style.display = 'none';
+                        if (level >= minLevel && level <= maxLevel) {
+                            option.style.display = 'block';
+                        } else {
+                            option.style.display = 'none';
+                        }
                     }
-                }
-                for (let i = 0; i < npcSelect.options.length; i++) {
-                    if (npcSelect.options[i].style.display === 'block') {
-                        npcSelect.selectedIndex = i;
-                        break;
-                    }
-                }
-            });
-            personaggiSelect.dispatchEvent(new Event('change'));
-        });
-
-    </script>
-
-    
-        <script>
-        document.addEventListener('DOMContentLoaded', () => 
-        {
-            const personaggiSelect = document.getElementById('player');
-            const questCheckboxes = document.querySelectorAll('input[name="quest_type"]');
-            
-            
-            personaggiSelect.addEventListener('change', () => 
-            {
-                const selectedOption = personaggiSelect.options[personaggiSelect.selectedIndex];
-                const playerLanguage = parseInt(selectedOption.getAttribute('language'), 10);
-
-                questCheckboxes.forEach(checkbox => {
-                    const questLanguage = parseInt(checkbox.getAttribute('language'), 10);
-                    const currentId = parseInt(checkbox.getAttribute('idCH'), 10);
-                    console.log(currentId);
-                    console.log(questLanguage);
-                    console.log(playerLanguage);
-                    const idCheckbox = document.getElementById(currentId);
-
-                    if (playerLanguage === questLanguage) {
-                        idCheckbox.style.display = 'inline-block';
-                        checkbox.style.display = 'inline-block';
-                    } else {
-                        idCheckbox.style.display = 'none';
-                        checkbox.style.display = 'none';
+                    for (let i = 0; i < npcSelect.options.length; i++) {
+                        if (npcSelect.options[i].style.display === 'block') {
+                            npcSelect.selectedIndex = i;
+                            break;
+                        }
                     }
                 });
-
-                
+                personaggiSelect.dispatchEvent(new Event('change'));
             });
-            personaggiSelect.dispatchEvent(new Event('change'));
-        });
+
         </script>
+
+        
+            <script>
+            document.addEventListener('DOMContentLoaded', () => 
+            {
+                const personaggiSelect = document.getElementById('player');
+                const questCheckboxes = document.querySelectorAll('input[name="quest_type"]');
+                
+                
+                personaggiSelect.addEventListener('change', () => 
+                {
+                    const selectedOption = personaggiSelect.options[personaggiSelect.selectedIndex];
+                    const playerLanguage = parseInt(selectedOption.getAttribute('language'), 10);
+
+                    questCheckboxes.forEach(checkbox => {
+                        const questLanguage = parseInt(checkbox.getAttribute('language'), 10);
+                        const currentId = parseInt(checkbox.getAttribute('idCH'), 10);
+                        console.log(currentId);
+                        console.log(questLanguage);
+                        console.log(playerLanguage);
+                        const idCheckbox = document.getElementById(currentId);
+
+                        if (playerLanguage === questLanguage) {
+                            idCheckbox.style.display = 'inline-block';
+                            checkbox.style.display = 'inline-block';
+                        } else {
+                            idCheckbox.style.display = 'none';
+                            checkbox.style.display = 'none';
+                        }
+                    });
+
+                    
+                });
+                personaggiSelect.dispatchEvent(new Event('change'));
+            });
+            </script>
 
 
     </form>

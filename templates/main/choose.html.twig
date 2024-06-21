@@ -1,181 +1,35 @@
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Spiegazione della quest{% endblock %}
+{% block title %}Quest Explenation{% endblock %}
 
 {% block content %}
 
-    <h1>{{ app.session.get('quest_type') }}</h1>
+    <h1 class="quest-type">{{ app.session.get('quest_type') }}</h1>
+    <p class="quest-giver">{{ app.session.get('npcTitle') }}:</p>
     {% set questType = app.session.get('quest_type') %}
 
-    
-
     {% if questType == 'Porta un tesoro a un mio associato' or questType == "Bring a treasure to an associate"%}
-        <h1>l'item selezionato da trasportare è {{ item['id'] }} | {{ item['title'] }} (lvl. {{ item['rarity'] }})</h1>
-        <h4>il quest reciver è {{ quest_reciver['id'] }} | {{ quest_reciver['title'] }} ({{ quest_reciver['organization'] }})</h4>
-        <h4>Il quest reciver si trova in una zona controllata da |{{ qreciver_room['faction']}}|</h4>
-        <h4>Nel |{{ qreciver_room['building']}}| di |{{ qreciver_room['place']}}|</h4>
-        <h4>Motivo della missione: {{why['why']}}</h4>
-        {# <h2> Si trova nel |{{ hidingPlace['stringa'] }}|</h2> #}
-
-
+        {% include 'main/quest_type_1.html.twig' %}
 
     {% elseif questType == 'Trovami gli ingredienti per un mistico unguento' or questType == "Fetch me the ingredients"%}
-        <h1>l'item selezionato è |{{ item['id'] }} - {{ item['title'] }} (lvl. {{ item['rarity'] }})|</h1>
-        <h2>Lista ingredienti e dove trovarli :</h2>
-
-        <dl>
-            {% if item['1itemid'] is not empty %}
-                <dt>
-                <h3>-{{ item['1itemid'] }}</h3>
-                </dt>
-                {% if itemid1['specialwilderness'] == '1' %}
-                    <dd>
-                        <h4>Puoi trovare questo ingrediente nei seguenti luoghi:</h4>
-                        {% if itemid1['whereinwilderness1'] is not empty %}
-                            <h5>|{{ itemid1['whereinwilderness1'] }}|</h5>
-                        {% endif %}
-                        {% if itemid1['whereinwilderness2'] is not empty %}
-                            <h5>|{{ itemid1['whereinwilderness2'] }}|</h5>
-                        {% endif %}
-                        {% if itemid1['whereinwilderness3'] is not empty %}
-                            <h5>|{{ itemid1['whereinwilderness3'] }}|</h5>
-                        {% endif %}
-                        {% if itemid1['whereinwilderness4'] is not empty %}
-                            <h5>|{{ itemid1['whereinwilderness4'] }}|</h5>
-                        {% endif %}
-                    </dd>
-                {% endif %}
-                {% if itemid1['specialwilderness'] == '0' %}
-                    <dd>
-                        <h5> L'item si trova in una zona controllata da |{{ itemid1['faction'] }}|</h5>
-                        <h5> Nel |{{ itemid1['building'] }}| di |{{itemid1['place'] }}| </h5>
-                        <h5> Si trova nel |{{ itemid1['hidingPlace'] }}| </h5>
-                    </dd>
-                {% endif %}
-            {% endif %}
-
-            {% if item['2itemid'] is not empty %}
-                <dt>
-                <h3>-{{ item['2itemid'] }}</h3>
-                </dt>
-                {% if itemid2['specialwilderness'] == '1' %}
-                    <dd>
-                        <h4>Puoi trovare questo ingrediente nei seguenti luoghi:</h4>
-                        {% if itemid2['whereinwilderness1'] is not empty %}
-                            <h5>|{{ itemid2['whereinwilderness1'] }}|</h5>
-                        {% endif %}
-                        {% if itemid2['whereinwilderness2'] is not empty %}
-                            <h5>|{{ itemid2['whereinwilderness2'] }}|</h5>
-                        {% endif %}
-                        {% if itemid2['whereinwilderness3'] is not empty %}
-                            <h5>|{{ itemid2['whereinwilderness3'] }}|</h5>
-                        {% endif %}
-                        {% if itemid2['whereinwilderness4'] is not empty %}
-                            <h5>|{{ itemid2['whereinwilderness4'] }}|</h5>
-                        {% endif %}
-                    </dd>
-                {% endif %}
-                {% if itemid2['specialwilderness'] == '0' %}
-                    <dd>
-                        <h5> L'item si trova in una zona controllata da |{{ itemid2['faction'] }}|</h5>
-                        <h5> Nel |{{ itemid2['building'] }}| di |{{itemid2['place'] }}| </h5>
-                        <h5> Si trova nel |{{ itemid2['hidingPlace'] }}| </h5>
-                    </dd>
-                {% endif %}
-            {% endif %}
-
-            {% if item['3itemid'] is not empty %}
-                <dt>
-                <h3>-{{ item['3itemid'] }}</h3>
-                </dt>
-                {% if itemid3['specialwilderness'] == '1' %}
-                    <dd>
-                        <h4>Puoi trovare questo ingrediente nei seguenti luoghi:</h4>
-                        {% if itemid3['whereinwilderness1'] is not empty %}
-                            <h5>|{{ itemid3['whereinwilderness1'] }}|</h5>
-                        {% endif %}
-                        {% if itemid3['whereinwilderness2'] is not empty %}
-                            <h5>|{{ itemid3['whereinwilderness2'] }}|</h5>
-                        {% endif %}
-                        {% if itemid3['whereinwilderness3'] is not empty %}
-                            <h5>|{{ itemid3['whereinwilderness3'] }}|</h5>
-                        {% endif %}
-                        {% if itemid3['whereinwilderness4'] is not empty %}
-                            <h5>|{{ itemid3['whereinwilderness4'] }}|</h5>
-                        {% endif %}
-                    </dd>
-                {% endif %}
-                {% if itemid3['specialwilderness'] == '0' %}
-                    <dd>
-                        <h5> L'item si trova in una zona controllata da |{{ itemid3['faction'] }}|</h5>
-                        <h5> Nel |{{ itemid3['building'] }}| di |{{itemid3['place'] }}| </h5>
-                        <h5> Si trova nel |{{ itemid3['hidingPlace'] }}| </h5>
-                    </dd>
-                {% endif %}
-            {% endif %}
-
-            {% if item['4itemid'] is not empty %}
-                <dt>
-                <h3>-{{ item['4itemid'] }}</h3>
-                </dt>
-                {% if itemid4['specialwilderness'] == '1' %}
-                    <dd>
-                        <h4>Puoi trovare questo ingrediente nei seguenti luoghi:</h4>
-                        {% if itemid4['whereinwilderness1'] is not empty %}
-                            <h5>|{{ itemid4['whereinwilderness1'] }}|</h5>
-                        {% endif %}
-                        {% if itemid4['whereinwilderness2'] is not empty %}
-                            <h5>|{{ itemid4['whereinwilderness2'] }}|</h5>
-                        {% endif %}
-                        {% if itemid4['whereinwilderness3'] is not empty %}
-                            <h5>|{{ itemid4['whereinwilderness3'] }}|</h5>
-                        {% endif %}
-                        {% if itemid4['whereinwilderness4'] is not empty %}
-                            <h5>|{{ itemid4['whereinwilderness4'] }}|</h5>
-                        {% endif %}
-                    </dd>
-                {% endif %}
-                {% if itemid4['specialwilderness'] == '0' %}
-                    <dd>
-                        <h5> L'item si trova in una zona controllata da |{{ itemid4['faction'] }}|</h5>
-                        <h5> Nel |{{ itemid4['building'] }}| di |{{itemid4['place'] }}| </h5>
-                        <h5> Si trova nel |{{ itemid4['hidingPlace'] }}| </h5>
-                    </dd>
-                {% endif %}
-            {% endif %}
-        </dl>
-
-
+        {% include 'main/quest_type_2.html.twig' %}
 
     {% elseif questType == 'Recupera l\'oggetto che ci fu rubato' or questType == "Retrieve the stolen item"%}
-        <h1>l'item selezionato da recuperare è {{ item['id'] }} | {{ item['title'] }} (lvl. {{ item['rarity'] }})</h1>
-        <h4>L'item si trova in una zona controllata da |{{ room['faction']}}|</h4>
-        <h4>Nel |{{ room['building']}}| di |{{ room['place']}}|</h4>
-        <h4> Si trova nel |{{ room['hidingPlace'] }}|</h4>
-
+        {% include 'main/quest_type_3.html.twig' %}
 
     {% elseif questType == 'Salva una persona rapita' or questType == "Save the kidnapped associate" %}
-        <h1>l'npc da salvare è | {{ npc['id'] }} - {{ npc['title'] }} ({{ npc['organization'] }}, lvl.{{ npc['socialRank'] }})|</h1>
-        <h5>L'npc è stato rapito dalla fazione |{{ npc['organization'] }}|</h5>
-        <h5>E si trova nel |{{room['title']}}|, </h5>
-        <h5>Nel |{{ room['building'] }}| di |{{room['place'] }}| </h5>
+        {% include 'main/quest_type_4.html.twig' %}
                        
-
-
     {% elseif questType == 'Sbarazzaci di un nemico' or questType == "Dispatch my enemy"%}
-        <h1>il nemico da eliminare è | {{ enemy['id'] }} | {{ enemy['title'] }} ({{ enemy['organization'] }}, lvl.{{ enemy['socialRank'] }})</h1>
-        <h5>Il mostro da uccidere è un |{{ enemy['organization'] }}|</h5>
-        <h5>E si trova nel |{{room['title']}}|, </h5>
-        <h5>Nel |{{ room['building'] }}| di |{{room['place'] }}| </h5>
+        {% include 'main/quest_type_5.html.twig' %}
     {% endif %}
     
     
     <a href="{{ path('accept') }}">
-        <button type="submit">Accetta quest</button>
+        <button type="submit">Accept quest</button>
     </a>
 
     <a href="{{ path('refuse') }}">
-        <button type="submit">Rifiuta quest</button>
+        <button type="submit">Reject quest</button>
     </a>
 {% endblock %}

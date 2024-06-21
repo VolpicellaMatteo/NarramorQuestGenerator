@@ -1,0 +1,94 @@
+/* css custom */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
+
+
+:root {
+    --bg-pimary-custom-css: #181818;
+    --bg-secondary-custom-css: #fdfbe0;
+    --bg-secondary-white-custom-css: #fff;
+    --bg-transparent-custom-css: transparent;
+    --mt-2: 2rem;
+    --icon-checkbox-new: url(data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20viewBox='0%2C0%2C256%2C256'%20width='24px'%20height='24px'%3E%3Cg%20fill='%23181818'%20fill-rule='nonzero'%20stroke='none'%20stroke-width='1'%20stroke-linecap='butt'%20stroke-linejoin='miter'%20stroke-miterlimit='10'%20stroke-dasharray=''%20stroke-dashoffset='0'%20font-family='none'%20font-weight='none'%20font-size='none'%20text-anchor='none'%20style='mix-blend-mode:%20normal'%3E%3Cg%20transform='scale(10.66667%2C10.66667)'%3E%3Cpath%20d='M9.125%2C18.875c-0.192%2C0%20-0.384%2C-0.073%20-0.53%2C-0.22l-6.125%2C-6.125c-0.293%2C-0.293%20-0.293%2C-0.768%200%2C-1.061c0.293%2C-0.293%200.768%2C-0.293%201.061%2C0l5.595%2C5.595l11.72%2C-11.72c0.293%2C-0.293%200.768%2C-0.293%201.061%2C0c0.293%2C0.293%200.293%2C0.768%200%2C1.061l-12.25%2C12.25c-0.148%2C0.147%20-0.34%2C0.22%20-0.532%2C0.22z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E);
+   
+} 
+body, html, h1, h2,h3,h4,h5, p {
+    font-family: "EB Garamond", serif !important;
+    background-color: var(--bg-pimary-custom-css) !important;
+    font-weight: 100 !important;
+}
+body {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+.image-logo {
+    height: 60px;
+}
+
+.title-first-quest {
+    font-size: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    z-index: 2;
+    background-color: var(--bg-transparent-custom-css) !important;
+    margin: 0;
+    padding: 0;
+}
+.quest_type{
+    display: grid;
+}
+
+button[type="submit"] {
+    background-color: var(--bg-secondary-white-custom-css) !important;
+    color: var(--bg-pimary-custom-css) !important;
+    margin-top: var(--mt-2);
+    border: none !important;
+}
+button[type="submit"]:hover {
+   background-color: var(--bg-secondary-custom-css) !important;
+}
+.container-begin-image{
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+}
+.image-title{
+    position: relative;
+    opacity: .4;
+    z-index: 1;
+}
+.title-first-quest {
+    position: absolute;
+}
+.container-image-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container-separator{
+    text-align: center;
+    margin-top: var(--mt-2);
+}
+#player, #npc {
+    background-color: var(--bg-transparent-custom-css) !important;
+    border: solid 1px #fdfbe0 !important;
+}
+
+[type=checkbox]:checked, [type=checkbox]:checked:active, [type=checkbox]:checked:focus, [type=radio]:checked, [type=radio]:checked:active, [type=radio]:checked:focus {
+    --background-color: var(--bg-secondary-white-custom-css) !important;
+    --border-color: var(--bg-secondary-white-custom-css) !important;
+    background-image: url(/assets/image/select.svg);
+    background-position: center;
+    background-size: 0.75em auto;
+    background-repeat: no-repeat;
+}
+
+input:not([type=submit], [type=button], [type=reset], [type=range], [type=file], [readonly]):focus, select:focus, textarea:focus {
+    --box-shadow: 0 0 0 var(--outline-width) #fdfbe0 !important;
+}
+[type=checkbox], [type=radio] {
+    border: solid 1px var(--bg-secondary-white-custom-css) !important;
+}
+.pointer{
+    cursor: pointer;
+}

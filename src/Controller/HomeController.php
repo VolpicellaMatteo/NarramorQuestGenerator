@@ -17,7 +17,7 @@ class HomeController extends AbstractController
     //private Database $database;
 
     #[Route('/', name: 'home')]
-    public function home(DatabaseService $databaseService,SessionInterface $session) :Response
+    public function home(DatabaseService $databaseService, SessionInterface $session) :Response
     {
         
          // Elimina la sessione esistente

@@ -32,14 +32,50 @@ class Save_kidanapped_npc
             $room = $databaseService->getKidnappedNpcRoom($enemyOrg['title'], $playerLevel);
         }
         
+        $paramString = "Tipo di quest: save the kidnapped npc
+            dobbiamo salvare {$npc['title']} 
+            che è stati rapito da {$room['faction']} 
+            si trova nel place {$room['place']} 
+            nel building {$room['building']} 
+            nella stanza {$room['title']}";
+        
+        $prompt = $this->getGPTquest($paramString);
+
         $params = [
             'npc'=> $npc,
-            'room'=> $room 
+            'room'=> $room,
+            'questBot'=> $prompt['a']
         ];
         
         return $params;
-
     }
 
+    
+    public function getGPTquest($params) {
+
+        $params = str_replace(array("\r", "\n"), '', $params);
+    
+        $prompt = " curl -X POST https://bankchat.accomazzi.net/rpg/q \
+            -H \"Content-Type: application/json\" \
+            -d '{
+                \"q\": \"$params\",
+                \"sid\": \"123\"
+            }'
+        ";
+    
+        $response = shell_exec($prompt);
+    
+        $data = json_decode($response, true);
+
+        // Controlla se la decodifica è riuscita correttamente
+        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            die("Errore nella decodifica del JSON");
+        }
+        
+        // Converte l'array associativo PHP in una stringa PHP formattata
+        //$stringaPHP = var_export($data, true); 
+       
+        return $data;
+    }
 
 }

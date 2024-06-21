@@ -1,0 +1,119 @@
+<p class="testo-bot">"{{ questBot }}"</p>
+<h2 class="quest2-intestazione">l'item selezionato è |{{ item['id'] }} - {{ item['title'] }} (lvl. {{ item['rarity'] }})|</h2>
+<h2 class="quest2-intestazione">Lista ingredienti e dove trovarli :</h2>
+
+    <div class="quest2-container-all">
+        {% if itemid1 != '' and item['1itemid'] is not empty %}
+            <h3 class="item-title">{{ item['1itemid'] }}</h3>
+            {% if itemid1['specialwilderness'] == '1' %}
+                <ul class="ul-parametri">
+                    <h5 class="item-subtytle">Puoi trovare questo ingrediente nei seguenti luoghi:</h5>
+                    {% if itemid1['whereinwilderness1'] is not empty %}
+                        <li class="li-parametri">|{{ itemid1['whereinwilderness1'] }}|</li>
+                    {% endif %}
+                    {% if itemid1['whereinwilderness2'] is not empty %}
+                        <li class="li-parametri">|{{ itemid1['whereinwilderness2'] }}|</li>
+                    {% endif %}
+                    {% if itemid1['whereinwilderness3'] is not empty %}
+                        <li class="li-parametri">|{{ itemid1['whereinwilderness3'] }}|</li>
+                    {% endif %}
+                    {% if itemid1['whereinwilderness4'] is not empty %}
+                        <li class="li-parametri">|{{ itemid1['whereinwilderness4'] }}|</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            {% if itemid1['specialwilderness'] == '0' %}
+                <ul class="ul-parametri">
+                    <li class="li-parametri"> L'item si trova in una zona controllata da |{{ itemid1['faction'] }}|</li>
+                    <li class="li-parametri"> Nel |{{ itemid1['building'] }}| di |{{itemid1['place'] }}| </li>
+                    <li class="li-parametri"> Si trova nel |{{ itemid1['hidingPlace'] }}| </li>
+                </ul>
+            {% endif %}
+        {% endif %}
+
+        {% if itemid2 != '' and item['2itemid'] is not empty %}
+            <h3 class="item-title">{{ item['2itemid'] }}</h3>
+            {% if itemid2['specialwilderness'] == '1' %}
+                <ul class="ul-parametri">
+                    <h5 class="item-subtytle">Puoi trovare questo ingrediente nei seguenti luoghi:</h5>
+                    {% if itemid2['whereinwilderness1'] is not empty %}
+                        <li class="li-parametri">|{{ itemid2['whereinwilderness1'] }}|</li>
+                    {% endif %}
+                    {% if itemid2['whereinwilderness2'] is not empty %}
+                        <li class="li-parametri">|{{ itemid2['whereinwilderness2'] }}|</li>
+                    {% endif %}
+                    {% if itemid2['whereinwilderness3'] is not empty %}
+                        <li class="li-parametri">|{{ itemid2['whereinwilderness3'] }}|</li>
+                    {% endif %}
+                    {% if itemid2['whereinwilderness4'] is not empty %}
+                        <li class="li-parametri">|{{ itemid2['whereinwilderness4'] }}|</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            {% if itemid2['specialwilderness'] == '0' %}
+                <ul class="ul-parametri">
+                    <li class="li-parametri"> L'item si trova in una zona controllata da |{{ itemid2['faction'] }}|</li>
+                    <li class="li-parametri"> Nel |{{ itemid2['building'] }}| di |{{itemid2['place'] }}| </li>
+                    <li class="li-parametri"> Si trova nel |{{ itemid2['hidingPlace'] }}| </li>
+                </ul>
+            {% endif %}
+        {% endif %}
+
+        {% if itemid3 != '' and item['3itemid'] is not empty %}
+            <h3 class="item-title">{{ item['3itemid'] }}</h3>
+            {% if itemid3['specialwilderness'] == '1' %}
+                <ul class="ul-parametri">
+                    <h5 class="item-subtytle">Puoi trovare questo ingrediente nei seguenti luoghi:</h5>
+                    {% if itemid3['whereinwilderness1'] is not empty %}
+                        <li class="li-parametri">|{{ itemid3['whereinwilderness1'] }}|</li>
+                    {% endif %}
+                    {% if itemid3['whereinwilderness2'] is not empty %}
+                        <li class="li-parametri">|{{ itemid3['whereinwilderness2'] }}|</li>
+                    {% endif %}
+                    {% if itemid3['whereinwilderness3'] is not empty %}
+                        <li class="li-parametri">|{{ itemid3['whereinwilderness3'] }}|</li>
+                    {% endif %}
+                    {% if itemid3['whereinwilderness4'] is not empty %}
+                        <li class="li-parametri">|{{ itemid3['whereinwilderness4'] }}|</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            {% if itemid3['specialwilderness'] == '0' %}
+                <ul class="ul-parametri">
+                    <li class="li-parametri"> L'item si trova in una zona controllata da |{{ itemid3['faction'] }}|</li>
+                    <li class="li-parametri"> Nel |{{ itemid3['building'] }}| di |{{itemid3['place'] }}| </li>
+                    <li class="li-parametri"> Si trova nel |{{ itemid3['hidingPlace'] }}| </li>
+                </ul>
+            {% endif %}
+        {% endif %}
+
+        {% if itemid4 != '' and item['4itemid'] is not empty %}
+            <h3 class="item-title">{{ item['4itemid'] }}</h3>
+            {% if itemid4['specialwilderness'] == '1' %}
+                <ul class="ul-parametri">
+                    <h5 class="item-subtytle">Puoi trovare questo ingrediente nei seguenti luoghi:</h5>
+                    {% if itemid4['whereinwilderness1'] is not empty %}
+                        <li class="li-parametri">|{{ itemid4['whereinwilderness1'] }}|</li>
+                    {% endif %}
+                    {% if itemid4['whereinwilderness2'] is not empty %}
+                        <li class="li-parametri">|{{ itemid4['whereinwilderness2'] }}|</li>
+                    {% endif %}
+                    {% if itemid4['whereinwilderness3'] is not empty %}
+                        <li class="li-parametri">|{{ itemid4['whereinwilderness3'] }}|</li>
+                    {% endif %}
+                    {% if itemid4['whereinwilderness4'] is not empty %}
+                        <li class="li-parametri">|{{ itemid4['whereinwilderness4'] }}|</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            {% if itemid4['specialwilderness'] == '0' %}
+                <ul class="ul-parametri">
+                    <li class="li-parametri"> L'item si trova in una zona controllata da |{{ itemid4['faction'] }}|</li>
+                    <li class="li-parametri"> Nel |{{ itemid4['building'] }}| di |{{itemid4['place'] }}| </li>
+                    <li class="li-parametri"> Si trova nel |{{ itemid4['hidingPlace'] }}| </li>
+                </ul>
+            {% endif %}
+        {% endif %}
+
+    </div>
+
